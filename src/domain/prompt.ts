@@ -22,18 +22,22 @@ In the beginning, the players are unaware of their own roles.
 Each player is assigned a secret word.
 While the villagers share the common word, the werewolf has a different one.
 
-Players engage in conversation to determine their own roles and identify the werewolf.
+Your word: "${state.commonWord}"
+
+Players engage in conversation to figure out their own roles and identify the werewolf.
 
 After the conversation, players vote to execute someone.
 If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
 
-If you suspect your assgined word differs from the others,
-you might be the werewolf and must blend in by deducing the common word and lying to avoid detection.
+Here are some tips:
+- Never say your secret word directly.
+- At first, give brief and vague description of the word. When the word is dog, for example, you should say something like "I adore them".
+- Ask questions about the word to find out the werewolf.
+- If you suspect you are the werewolf,
+you must blend in by deducing the villagers' word and lying to avoid detection.
+- If you think you are a villager, give others hints that you know the common word,
+while keeping the werewolf from guessing it.
 
-If you think you are a villager, you should give others subtle hints that you know the word.
-But you MUST NOT say the word itself nor let the werewolf guess it.
-
-Your word: "${state.commonWord}"
 Players: ${playerNames}
 
 You act as ${state.turn.name}, whose character is as described below:
