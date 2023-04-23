@@ -1,6 +1,6 @@
 // src/ChatMessage.tsx
 import React from 'react';
-import { ChatMessage } from '../domain/state';
+import { ChatMessage } from './state';
 
 const ChatMessage: React.FC<{ message: ChatMessage }> = ({ message }) => {
     const messageClasses =

@@ -1,7 +1,7 @@
 // src/Chat.tsx
 import React, { useState } from 'react';
 import ChatMessage from './ChatMessage';
-import { ChattingState } from '../domain/state';
+import { ChattingState } from './state';
 
 interface Props {
     state: ChattingState;

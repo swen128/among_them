@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 import { LanguageModel } from '../api/language_model';
-import { buildPrompt, parseResponse } from '../domain/prompt';
-import { BotPlayer, ChattingState, initialState, isPlayerTurn, withNewChatMessage } from '../domain/state';
+import { buildPrompt, parseResponse } from './prompt';
+import { BotPlayer, ChattingState, initialState, isPlayerTurn, withNewChatMessage } from './state';
 import Chat from './Chat';
 
 interface Props {
