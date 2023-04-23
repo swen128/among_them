@@ -1,5 +1,5 @@
 import './style.css'
-import Game from './word_wolf/Game'
+import Game from './insider/Game'
 import { OpenAiChat } from './api/language_model'
 import { useState } from 'react';
 
