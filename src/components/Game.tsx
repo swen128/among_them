@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 import { LanguageModel } from '../api/language_model';
-import { buildPrompt } from '../domain/prompt';
+import { buildPrompt, parseResponse } from '../domain/prompt';
 import { BotPlayer, ChattingState, initialState, isPlayerTurn, withNewChatMessage } from '../domain/state';
 import Chat from './Chat';
 
@@ -21,7 +21,16 @@ const Game: React.FC<Props> = ({ languageModel }) => {
     const [llmState, askLlm] = useAsyncFn(async (state: ChattingState) => {
         const prompt = buildPrompt(state);
         const response = await languageModel.ask(prompt);
-        setState(withNewChatMessage(state, response));
+        const result = parseResponse(response);
+
+        if (!result.success) {
+            console.error("Failed to parse response", result);
+            return;
+        }
+
+        console.log(`${state.turn.name}'s thoughts: ${result.data.thoughts}`)
+
+        setState(withNewChatMessage(state, result.data.say));
     }, [languageModel]);
 
     useEffect(() => {

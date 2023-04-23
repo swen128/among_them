@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { Prompt } from "../api/language_model";
 import { ChattingState } from "./state";
 
@@ -40,7 +41,35 @@ ${state.turn.characterDescription}
 
 Chat log: ${chatLog}
 
-Your turn to say something.`;
+Your turn to say something. You must respond in the following JSON format:
+{
+    "thoughts": "blah blah",
+    "say": "blah blah"
+}`;
 
     return [{ role: "user", content: instructions }];
 }
+
+export type LanguageModelResponse = z.infer<typeof responseSchema>;
+
+export function parseResponse(response: string) {
+    return jsonStringSchema.pipe(responseSchema).safeParse(response);
+}
+
+const responseSchema = z.object({
+    thoughts: z.string(),
+    say: z.string(),
+})
+
+/**
+ * Zod schema for parsing JSON string
+ */
+const jsonStringSchema = z.string()
+    .transform((str, ctx) => {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
+            return z.NEVER;
+        }
+    });

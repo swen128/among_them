@@ -57,12 +57,6 @@ function nextPlayer(state: ChattingState): Player {
 export function withNewChatMessage(state: ChattingState, text: string): ChattingState {
     const message = { sender: state.turn, text };
 
-    console.log({
-        ...state,
-        chatLog: [...state.chatLog, message],
-        turn: nextPlayer(state),
-    })
-
     return {
         ...state,
         chatLog: [...state.chatLog, message],
@@ -77,7 +71,7 @@ export function initialState(humanPlayerName: string, botPlayers: BotPlayer[]): 
         botPlayers,
         phase: "chat",
         turn: botPlayers[0],
-        commonWord: "dog",
-        wolfWord: "wolf",
+        commonWord: "Minecraft",
+        wolfWord: "Terraria",
     };
 }
