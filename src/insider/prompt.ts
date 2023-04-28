@@ -11,10 +11,7 @@ export function qaPhasePrompt(state: QuestionState): Prompt[] {
     }
 
     const playerNames = [...state.botPlayers, state.humanPlayer].map(p => p.name).join(", ");
-    const chatLog = JSON.stringify(state.chatLog.map(message => ({
-        name: message.sender.name,
-        text: message.text,
-    })))
+    const chatLog = state.chatLog.map(message => `[${message.sender.name}] ${message.text}`).join("\n");
 
     const instructions = dedent`
         You are playing a game of "Insider".
