@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Prompt } from "../api/language_model";
-import { ChattingState } from "./state";
+import { ChattingState, allPlayers, playerWord } from "./state";
 
 export function buildPrompt(state: ChattingState): Prompt[] {
     if (state.turn.type === "human") {
@@ -8,7 +8,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     }
 
     const numVillagers = state.botPlayers.length;
-    const playerNames = [...state.botPlayers.map(p => p.name), state.humanPlayer.name].join(", ");
+    const playerNames = allPlayers(state).map(p => p.name).join(", ");
     const chatLog = JSON.stringify(state.chatLog.map(message => ({
         name: message.sender.name,
         text: message.text,
@@ -22,7 +22,7 @@ In the beginning, the players are unaware of their own roles.
 Each player is assigned a secret word.
 While the villagers share the common word, the werewolf has a different one.
 
-Your word: "${state.commonWord}"
+Your word: "${playerWord(state, state.turn)}"
 
 Players engage in conversation to figure out their own roles and identify the werewolf.
 
@@ -47,7 +47,7 @@ Chat log: ${chatLog}
 
 Your turn to say something. You must respond in the following JSON format:
 {
-    "thoughts": "blah blah",
+    "thoughts": "Who do you think is the werewolf? Why?",
     "say": "blah blah"
 }`;
 

@@ -1,9 +1,10 @@
 interface BaseGameState {
     chatLog: ChatMessage[];
-    humanPlayer: HumanPlayer;
     botPlayers: BotPlayer[];
+    humanPlayer: HumanPlayer;
     commonWord: string;
     wolfWord: string;
+    wolf: Player;
 }
 
 export interface ChattingState extends BaseGameState {
@@ -39,19 +40,14 @@ export function isPlayerTurn(state: ChattingState): boolean {
     return state.turn.type === "human";
 }
 
-function nextPlayer(state: ChattingState): Player {
-    const { turn, botPlayers, humanPlayer } = state;
+export function allPlayers(state: GameState): Player[] {
+    return [...state.botPlayers, state.humanPlayer];
+}
 
-    switch (turn.type) {
-        case "human":
-            return botPlayers[0];
-        case "bot": {
-            const nextIndex = botPlayers.indexOf(turn) + 1;
-            return nextIndex < botPlayers.length
-                ? botPlayers[nextIndex]
-                : humanPlayer;
-        }
-    }
+function nextPlayer(state: ChattingState): Player {
+    const players = allPlayers(state);
+    const nextIndex = (players.indexOf(state.turn) + 1) % players.length;
+    return players[nextIndex];
 }
 
 export function withNewChatMessage(state: ChattingState, text: string): ChattingState {
@@ -64,14 +60,23 @@ export function withNewChatMessage(state: ChattingState, text: string): Chatting
     };
 }
 
-export function initialState(humanPlayerName: string, botPlayers: BotPlayer[]): GameState {
+export function playerWord(state: GameState, player: Player): string {
+    return player === state.wolf ? state.wolfWord : state.commonWord;
+}
+
+export function humanPlayerWord(state: GameState): string {
+    return playerWord(state, state.humanPlayer);
+}
+
+export function initialState(humanPlayer: HumanPlayer, botPlayers: BotPlayer[], wolf: Player): GameState {
     return {
         chatLog: [],
-        humanPlayer: { type: "human", name: humanPlayerName },
+        humanPlayer,
         botPlayers,
         phase: "chat",
         turn: botPlayers[0],
         commonWord: "Minecraft",
         wolfWord: "Terraria",
+        wolf,
     };
 }

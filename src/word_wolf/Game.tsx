@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 import { LanguageModel } from '../api/language_model';
-import { buildPrompt, parseResponse } from './prompt';
-import { BotPlayer, ChattingState, initialState, isPlayerTurn, withNewChatMessage } from './state';
 import Chat from './Chat';
+import { buildPrompt, parseResponse } from './prompt';
+import { BotPlayer, ChattingState, GameState, HumanPlayer, humanPlayerWord, initialState, isPlayerTurn, withNewChatMessage } from './state';
 
 interface Props {
     languageModel: LanguageModel;
@@ -11,12 +11,7 @@ interface Props {
 
 const Game: React.FC<Props> = ({ languageModel }) => {
     const userName = "Tom";
-    const botPlayers: BotPlayer[] = [
-        { type: "bot", name: "Bob", characterDescription: "A friendly guy" },
-        { type: "bot", name: "Alice", characterDescription: "A cool woman" },
-    ];
-
-    const [state, setState] = useState(initialState(userName, botPlayers));
+    const [state, setState] = useState(initial(userName));
 
     const [llmState, askLlm] = useAsyncFn(async (state: ChattingState) => {
         const prompt = buildPrompt(state);
@@ -49,9 +44,21 @@ const Game: React.FC<Props> = ({ languageModel }) => {
 
     return (
         <div className="w-full max-w-7xl h-full border p-4 shadow-lg rounded">
+            <div>Your word: {humanPlayerWord(state)}</div>
             {state.phase === "chat" && <Chat state={state} onSubmit={onChatSubmit} />}
         </div>
     );
 };
+
+function initial(userName: string): GameState {
+    const humanPlayer: HumanPlayer = { type: "human", name: userName };
+    const botPlayers: BotPlayer[] = [
+        { type: "bot", name: "Bob", characterDescription: "A friendly guy" },
+        { type: "bot", name: "Alice", characterDescription: "A cool woman" },
+    ];
+    const players = [...botPlayers, humanPlayer];
+    const werewolf = players[Math.floor(Math.random() * players.length)];
+    return initialState(humanPlayer, botPlayers, werewolf);
+}
 
 export default Game;
