@@ -3,16 +3,14 @@ import React from 'react';
 import { ChatMessage } from './state';
 
 const ChatMessage: React.FC<{ message: ChatMessage }> = ({ message }) => {
-    const messageClasses =
-        message.sender.type === 'human'
-            ? 'bg-blue-500 text-white self-end'
-            : 'bg-gray-300 text-black self-start';
+    const bubbleStyle = message.sender.type === 'human'
+        ? 'bg-indigo-500 text-white float-left'
+        : 'bg-gray-200 text-gray-800 float-right';
 
     return (
-        <div className="rounded-xl p-2 mb-2 flex items-center">
-            <div className={`rounded-lg px-4 py-2 ${messageClasses}`}>
-                {message.text}
-            </div>
+        <div className={`p-4 my-2 rounded-lg ${bubbleStyle} max-w-6xl clear-both`}>
+            <p className="font-bold">{message.sender.name}</p>
+            <p>{message.text}</p>
         </div>
     );
 };

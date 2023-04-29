@@ -9,7 +9,7 @@ interface Props {
 const ChatLog: React.FC<Props> = ({ log }) => {
     return (
         <div className="flex-grow overflow-y-auto p-4">
-            <div className="flex flex-col gap-2">
+            <div>
                 {log.map((message, index) => (
                     <ChatMessage key={index} message={message} />
                 ))}
