@@ -20,15 +20,11 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         You are playing a game of "Word Werewolf".
 
         There is 1 werewolf among the players and the rest are the villagers.
-        In the beginning, the players are unaware of their own roles.
-
         Each player is assigned a secret word.
         While the villagers share the common word, the werewolf has a different one.
+        In the beginning, the players are unaware of their own roles.
 
         Players engage in conversation to figure out their own roles and identify the werewolf.
-        Although different, the two words have some similarities, such as "dog" and "cat",
-        so that the werewolf would not immediately be apparent.
-
         After the conversation, players vote to execute someone.
         If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
 
@@ -41,8 +37,8 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     const postInstrucions = dedent`
         Your secret word: "${playerWord(state, state.turn)}"
 
-        1. Summarize each other's comments so far and guess their secret words.
-        2. Who seems to be the werewolf, the person given the different secret word?
+        1. Summarize each other's comments so far and guess what they are talking about.
+        2. Guess who is the werewolf, the only person who is given the different secret word. Why do you think so?
         3. Think what you should say next.
             - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
             - When you lack information, ask questions about the word to find out the werewolf.

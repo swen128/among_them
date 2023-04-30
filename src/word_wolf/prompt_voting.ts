@@ -40,7 +40,7 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
         Your secret word: "${playerWord(state, player)}"
 
         1. Summarize each other's comments so far and guess their secret words.
-        2. Who seems to be the werewolf, the person given the different secret word?
+        2. Who seems to be the werewolf (it might be you!), the person given the different secret word?
         3. Vote for the player to execute.
             - If you suspect you are the werewolf, vote for someone else.
             - If not, vote for the would-be werewolf.
