@@ -1,6 +1,6 @@
 // src/Chat.tsx
 import React, { useState } from 'react';
-import ChatMessage from './ChatMessage';
+import ChatLog from './ChatLog';
 import { ChattingState } from './state';
 
 interface Props {
@@ -19,13 +19,8 @@ const Chat: React.FC<Props> = ({ state, onSubmit }) => {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="flex-grow overflow-y-auto p-4">
-                <div className="flex flex-col gap-2">
-                    {state.chatLog.map((message, index) => (
-                        <ChatMessage key={index} message={message} />
-                    ))}
-                </div>
-            </div>
+            <div>Remaining turns: {state.remainingTurns}</div>
+            <ChatLog log={state.chatLog} />
             <form onSubmit={handleSubmit} className="border-t p-4">
                 <input
                     className="focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block appearance-none leading-normal w-full"

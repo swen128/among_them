@@ -27,6 +27,8 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         Your word: "${playerWord(state, state.turn)}"
 
         Players engage in conversation to figure out their own roles and identify the werewolf.
+        Although different, the two words have some similarities, such as "dog" and "cat",
+        so that the werewolf would not immediately be apparent.
 
         After the conversation, players vote to execute someone.
         If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.

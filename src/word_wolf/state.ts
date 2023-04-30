@@ -10,10 +10,20 @@ interface BaseGameState {
 export interface ChattingState extends BaseGameState {
     phase: "chat";
     turn: Player;
+    remainingTurns: number;
 }
 
 export interface VotingState extends BaseGameState {
     phase: "vote";
+    votes: Map<Player, Player | undefined>;
+}
+
+function votingState(state: ChattingState): VotingState {
+    const votes = new Map<Player, Player | undefined>();
+    for (const player of allPlayers(state)) {
+        votes.set(player, undefined);
+    }
+    return { ...state, phase: "vote", votes };
 }
 
 export type GameState = ChattingState | VotingState;
@@ -50,14 +60,13 @@ function nextPlayer(state: ChattingState): Player {
     return players[nextIndex];
 }
 
-export function withNewChatMessage(state: ChattingState, text: string): ChattingState {
-    const message = { sender: state.turn, text };
+export function withNewChatMessage(state: ChattingState, text: string): ChattingState | VotingState {
+    const chatLog = [...state.chatLog, { sender: state.turn, text }];
+    const remainingTurns = state.remainingTurns - 1;
 
-    return {
-        ...state,
-        chatLog: [...state.chatLog, message],
-        turn: nextPlayer(state),
-    };
+    return remainingTurns <= 0
+        ? { ...votingState(state), chatLog }
+        : { ...state, chatLog, turn: nextPlayer(state), remainingTurns: remainingTurns };
 }
 
 export function playerWord(state: GameState, player: Player): string {
@@ -68,6 +77,51 @@ export function humanPlayerWord(state: GameState): string {
     return playerWord(state, state.humanPlayer);
 }
 
+export function isVoteComplete(state: GameState): boolean {
+    return state.phase === "vote" &&
+        [...state.votes.values()].every(voted => voted !== undefined);
+}
+
+export function isBotVoteComplete(state: GameState): boolean {
+    return state.phase === "vote" &&
+        [...state.votes.entries()]
+            .filter(([voter]) => voter.type === "bot")
+            .every(([, voted]) => voted !== undefined);
+}
+
+export function votes(state: VotingState): { voter: Player, voted: Player }[] {
+    return [...state.votes.entries()]
+        .filter(([, voted]) => voted !== undefined)
+        .map(([voter, voted]) => ({ voter, voted: voted as Player }));
+}
+
+export function withNewVote(state: VotingState, voter: Player, voted: Player): VotingState {
+    const votes = new Map(state.votes);
+    votes.set(voter, voted);
+    return { ...state, votes };
+}
+
+export function counts(state: VotingState): Map<Player, number> {
+    const votedPlayers = [...state.votes.values()]
+        .filter(voted => voted !== undefined) as Player[];
+
+    const counts = new Map<Player, number>();
+    for (const player of votedPlayers) {
+        const count = counts.get(player) ?? 0;
+        counts.set(player, count + 1);
+    }
+    return counts;
+}
+
+export function executedPlayers(state: VotingState): Player[] {
+    const cnts = counts(state);
+    const maxCount = Math.max(...cnts.values());
+
+    return [...cnts.entries()]
+        .filter(([, count]) => count === maxCount)
+        .map(([player]) => player);
+}
+
 export function initialState(humanPlayer: HumanPlayer, botPlayers: BotPlayer[], wolf: Player): GameState {
     return {
         chatLog: [],
@@ -75,6 +129,7 @@ export function initialState(humanPlayer: HumanPlayer, botPlayers: BotPlayer[], 
         botPlayers,
         phase: "chat",
         turn: botPlayers[0],
+        remainingTurns: (botPlayers.length + 1) * 1,
         commonWord: "Minecraft",
         wolfWord: "Terraria",
         wolf,
