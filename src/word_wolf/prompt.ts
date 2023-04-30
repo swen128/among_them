@@ -19,7 +19,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     const instructions = dedent`
         You are playing a game of "Word Werewolf".
 
-        There are ${numVillagers} villagers and 1 werewolf in the game.
+        There is 1 werewolf among the players and the rest are the villagers.
         In the beginning, the players are unaware of their own roles.
 
         Each player is assigned a secret word.
@@ -32,12 +32,6 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         After the conversation, players vote to execute someone.
         If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
 
-        Here are some tips:
-        - At first, give brief and vague description of the word. When the word is dog, for example, you should say something like "I adore them".
-        - Ask questions about the word to find out the werewolf.
-        - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
-        - If you think you are a villager, give others hints that you know the common word, while keeping the werewolf from guessing it.
-
         Players: ${playerNames}
 
         You act as ${state.turn.name}, whose character is as described below:
@@ -47,10 +41,18 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     const postInstrucions = dedent`
         Your secret word: "${playerWord(state, state.turn)}"
 
-        You must respond in the following JSON format:
+        1. Summarize each other's comments so far and guess what they are talking about.
+        2. Rate the similarity (0-10) between each of their topic and your secret word.
+        3. Who do you think is most likely the werewolf? (It might be you!)
+        4. Think what you should say next.
+            - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
+            - When you lack information, ask questions about the word to find out the werewolf.
+            - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
+
+        Respond in the following JSON format:
         {
-            "thoughts": "Summarize each other's comments so far and guess what they are talking about. Do you think yourself in the majority, or minority here? Who do you believe to be the werewolf? (It might be you!)",
-            "say": "blah blah"
+            "thoughts": "string",
+            "say": "string"
         }
     `
 
