@@ -24,9 +24,8 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         While the villagers share the common word, the werewolf has a different one.
         In the beginning, the players are unaware of their own roles.
 
-        Players engage in conversation to figure out their own roles and identify the werewolf.
-        After the conversation, players vote to execute someone.
-        If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
+        Players talk about their secret words to identify the werewolf, and then vote to execute someone.
+        The villagers win if the werewolf is executed; otherwise the werewolf wins.
 
         Players: ${playerNames}
 

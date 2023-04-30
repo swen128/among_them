@@ -18,17 +18,12 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
         You are playing a game of "Word Werewolf".
 
         There is 1 werewolf among the players and the rest are the villagers.
-        In the beginning, the players are unaware of their own roles.
-
         Each player is assigned a secret word.
         While the villagers share the common word, the werewolf has a different one.
+        In the beginning, the players are unaware of their own roles.
 
-        Players engage in conversation to figure out their own roles and identify the werewolf.
-        Although different, the two words have some similarities, such as "dog" and "cat",
-        so that the werewolf would not immediately be apparent.
-
-        After the conversation, players vote to execute someone.
-        If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
+        Players talk about their secret words to identify the werewolf, and then vote to execute someone.
+        The villagers win if the werewolf is executed; otherwise the werewolf wins.
 
         Players: ${playerNames}
 
