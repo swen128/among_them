@@ -38,8 +38,8 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
 
     const postInstrucions = dedent`
         # What you should do
-        1. Summarize each other's comments so far and guess their secret words.
-        2. Who seems to be the werewolf (it might be you!), the person given the different secret word?
+        1. Summarize each other player's comments so far.
+        2. Guess who is most likely the minority (werewolf), explaining your logic step by step.
         3. Vote for the player to execute.
             - If you suspect you are the werewolf, vote for someone else.
             - If not, vote for the would-be werewolf.

@@ -41,8 +41,8 @@ export function buildPrompt(state: ChattingState): Prompt[] {
 
     const postInstrucions = dedent`
         # What you should do
-        1. Summarize each other's comments so far and guess their secret words.
-        2. Guess who is the minority (werewolf) here. Is it someone else or yourself?
+        1. Summarize each other player's comments so far.
+        2. Guess who is most likely the minority (werewolf), explaining your logic step by step.
         3. Think what you should say next.
             - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
             - When you lack information, ask questions about the word to find out the werewolf.
