@@ -49,7 +49,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
 
         You must respond in the following JSON format:
         {
-            "thoughts": "Summarize each other's comments and guess what they are talking about. Who do you think is the werewolf? (It might be you!)",
+            "thoughts": "Summarize each other's comments so far and guess what they are talking about. Do you think yourself in the majority, or minority here? Who do you believe to be the werewolf? (It might be you!)",
             "say": "blah blah"
         }
     `
