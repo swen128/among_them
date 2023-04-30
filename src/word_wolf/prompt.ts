@@ -8,7 +8,6 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         throw new Error("Cannot build prompt for player turn");
     }
 
-    const numVillagers = state.botPlayers.length;
     const playerNames = allPlayers(state).map(p => p.name).join(", ");
     const chatLog: Prompt[] = state.chatLog.map(message => ({
         role: message.sender === state.turn ? "assistant" : "user",
@@ -17,33 +16,39 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     }))
 
     const instructions = dedent`
+        # Game rules
         You are playing a game of "Word Werewolf".
 
-        There is 1 werewolf among the players and the rest are the villagers.
-        Each player is assigned a secret word.
-        While the villagers share the common word, the werewolf has a different one.
-        In the beginning, the players are unaware of their own roles.
+        There is one werewolf among the players.
+        Each player is given a secret word--the majority (villagers) shares a common word, while the werewolf has a different one.
+        No one (even the werewolf himself) knows who is the werewolf, so you have to talk about your secret words to find out.
+        
+        The players then vote to execute someone. The villagers win if the werewolf is executed; otherwise the werewolf wins.
 
-        Players talk about their secret words to identify the werewolf, and then vote to execute someone.
-        The villagers win if the werewolf is executed; otherwise the werewolf wins.
+        Giving away too much information would help the werewolf to blend in, or expose yourself if you are the werewolf.
+        On the other hand, you cannot make correct guess if you don't talk enough.
 
-        Players: ${playerNames}
+        # Players
+        ${playerNames}
 
+        # Your character
         You act as ${state.turn.name}, whose character is as described below:
         ${state.turn.characterDescription}
+
+        # Your secret word
+        ${playerWord(state, state.turn)}
     `;
 
     const postInstrucions = dedent`
-        Your secret word: "${playerWord(state, state.turn)}"
-
-        1. Summarize each other's comments so far and guess what they are talking about.
-        2. Guess who is the werewolf, the only person who is given the different secret word. Why do you think so?
+        # What you should do
+        1. Summarize each other's comments so far and guess their secret words.
+        2. Guess who is the minority (werewolf) here. Is it someone else or yourself?
         3. Think what you should say next.
             - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
             - When you lack information, ask questions about the word to find out the werewolf.
             - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
 
-        Respond in the following JSON format:
+        # Response format
         {
             "thoughts": "string",
             "say": "string"
