@@ -33,7 +33,6 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
 
         Here are some tips:
-        - Never say your secret word directly.
         - At first, give brief and vague description of the word. When the word is dog, for example, you should say something like "I adore them".
         - Ask questions about the word to find out the werewolf.
         - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
@@ -50,7 +49,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
 
         You must respond in the following JSON format:
         {
-            "thoughts": "Who do you think is the werewolf? Why?",
+            "thoughts": "Summarize each other's comments and guess what they are talking about. Who do you think is the werewolf? (It might be you!)",
             "say": "blah blah"
         }
     `
