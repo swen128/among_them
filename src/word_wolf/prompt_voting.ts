@@ -17,7 +17,7 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
     const instructions = dedent`
         You are playing a game of "Word Werewolf".
 
-        There are ${numVillagers} villagers and 1 werewolf in the game.
+        There is 1 werewolf among the players and the rest are the villagers.
         In the beginning, the players are unaware of their own roles.
 
         Each player is assigned a secret word.
@@ -30,12 +30,6 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
         After the conversation, players vote to execute someone.
         If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
 
-        Here are some tips:
-        - At first, give brief and vague description of the word. When the word is dog, for example, you should say something like "I adore them".
-        - Ask questions about the word to find out the werewolf.
-        - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
-        - If you think you are a villager, give others hints that you know the common word, while keeping the werewolf from guessing it.
-
         Players: ${playerNames}
 
         You act as ${player.name}, whose character is as described below:
@@ -45,10 +39,16 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
     const postInstrucions = dedent`
         Your secret word: "${playerWord(state, player)}"
 
-        Now it is the voting phase. You must respond in the following JSON format:
+        1. Summarize each other's comments so far and guess their secret words.
+        2. Who seems to be the werewolf, the person given the different secret word?
+        3. Vote for the player to execute.
+            - If you suspect you are the werewolf, vote for someone else.
+            - If not, vote for the would-be werewolf.
+        
+        Respond in the following JSON format:
         {
-            "thoughts": "Who do you think is the werewolf? Why?",
-            "votedPlayerName": "One of the player names"
+            "thoughts": "string",
+            "votedPlayerName": "string"
         }
     `;
 

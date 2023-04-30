@@ -41,10 +41,9 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     const postInstrucions = dedent`
         Your secret word: "${playerWord(state, state.turn)}"
 
-        1. Summarize each other's comments so far and guess what they are talking about.
-        2. Rate the similarity (0-10) between each of their topic and your secret word.
-        3. Who do you think is most likely the werewolf? (It might be you!)
-        4. Think what you should say next.
+        1. Summarize each other's comments so far and guess their secret words.
+        2. Who seems to be the werewolf, the person given the different secret word?
+        3. Think what you should say next.
             - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
             - When you lack information, ask questions about the word to find out the werewolf.
             - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
