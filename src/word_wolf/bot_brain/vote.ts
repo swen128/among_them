@@ -2,10 +2,10 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { BotPlayer, Player, VotingState, allPlayers, playerWord } from "../state";
+import { BotPlayer, Player, VotingState, playerWord } from "../state";
 
 function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
-    const playerNames = allPlayers(state).map(p => p.name).join(", ");
+    const playerNames = state.players.map(p => p.name).join(", ");
     const chatLog: Prompt[] = state.chatLog.map(message => ({
         role: message.sender === player ? "assistant" : "user",
         name: message.sender.name,
@@ -77,7 +77,7 @@ async function promptVoteUnsafe(lm: LanguageModel, state: VotingState, voter: Bo
     console.log(`${voter.name}' thoughts: ${response.data.thoughts}`);
 
     const votedName = response.data.votedPlayerName;
-    const voted = allPlayers(state).find(p => p.name === votedName);
+    const voted = state.players.find(p => p.name === votedName);
     if (!voted) {
         throw new Error(`Invalid player name: ${votedName}`);
     }
@@ -86,13 +86,13 @@ async function promptVoteUnsafe(lm: LanguageModel, state: VotingState, voter: Bo
 }
 
 function randomVote(state: VotingState, voter: BotPlayer): Player {
-    const players = allPlayers(state);
+    const players = state.players;
     const voterIndex = players.indexOf(voter);
 
     const i = Math.floor(Math.random() * players.length - 1);
     const votedIndex = i < voterIndex ? i : i + 1;
 
-    return allPlayers(state)[votedIndex];
+    return state.players[votedIndex];
 }
 
 export const promptVote = (lm: LanguageModel, maxRetries: number, state: VotingState) =>

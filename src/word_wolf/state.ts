@@ -1,7 +1,6 @@
 interface BaseGameState {
     chatLog: ChatMessage[];
-    botPlayers: BotPlayer[];
-    humanPlayer: HumanPlayer;
+    players: Player[];
     commonWord: string;
     wolfWord: string;
     wolf: Player;
@@ -20,7 +19,7 @@ export interface VotingState extends BaseGameState {
 
 function votingState(state: ChattingState): VotingState {
     const votes = new Map<Player, Player | undefined>();
-    for (const player of allPlayers(state)) {
+    for (const player of state.players) {
         votes.set(player, undefined);
     }
     return { ...state, phase: "vote", votes };
@@ -46,16 +45,16 @@ export interface BotPlayer {
     characterDescription: string;
 }
 
+export function isBot(player: Player): player is BotPlayer {
+    return player.type === "bot";
+}
+
 export function isPlayerTurn(state: ChattingState): boolean {
     return state.turn.type === "human";
 }
 
-export function allPlayers(state: GameState): Player[] {
-    return [...state.botPlayers, state.humanPlayer];
-}
-
 function nextPlayer(state: ChattingState): Player {
-    const players = allPlayers(state);
+    const players = state.players;
     const nextIndex = (players.indexOf(state.turn) + 1) % players.length;
     return players[nextIndex];
 }
@@ -70,11 +69,7 @@ export function withNewChatMessage(state: ChattingState, text: string): Chatting
 }
 
 export function playerWord(state: GameState, player: Player): string {
-    return player === state.wolf ? state.wolfWord : state.commonWord;
-}
-
-export function humanPlayerWord(state: GameState): string {
-    return playerWord(state, state.humanPlayer);
+    return player.name === state.wolf.name ? state.wolfWord : state.commonWord;
 }
 
 export function isVoteComplete(state: GameState): boolean {
@@ -122,14 +117,13 @@ export function executedPlayers(state: VotingState): Player[] {
         .map(([player]) => player);
 }
 
-export function initialState(humanPlayer: HumanPlayer, botPlayers: BotPlayer[], wolf: Player): ChattingState {
+export function initialState(players: Player[], wolf: Player): ChattingState {
     return {
         chatLog: [],
-        humanPlayer,
-        botPlayers,
+        players,
         phase: "chat",
-        turn: botPlayers[0],
-        remainingTurns: (botPlayers.length + 1) * 4,
+        turn: players[0],
+        remainingTurns: players.length * 4,
         commonWord: "Minecraft",
         wolfWord: "bike",
         wolf,

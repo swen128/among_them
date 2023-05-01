@@ -2,14 +2,14 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { ChattingState, allPlayers, playerWord } from "../state";
+import { ChattingState, playerWord } from "../state";
 
 export function buildPrompt(state: ChattingState): Prompt[] {
     if (state.turn.type === "human") {
         throw new Error("Cannot build prompt for player turn");
     }
 
-    const playerNames = allPlayers(state).map(p => p.name).join(", ");
+    const playerNames = state.players.map(p => p.name).join(", ");
     const chatLog: Prompt[] = state.chatLog.map(message => ({
         role: message.sender === state.turn ? "assistant" : "user",
         name: message.sender.name,
