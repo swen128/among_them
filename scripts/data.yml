@@ -1,0 +1,19 @@
+- description: The wolf is immediately exposed.
+  commonWord: Minecraft
+  wolfWord: bike
+  wolf: Bob
+  next: Bob
+  chatLog:
+    - "[Bob] My word reminds me of something I like to do outdoors."
+    - "[Alice] Mine is a pretty popular video game."
+    - "[Connor] Me too, Alice."
+
+- description: The wolf is immediately exposed.
+  commonWord: Minecraft
+  wolfWord: bike
+  wolf: Bob
+  next: Alice
+  chatLog:
+    - "[Bob] My word reminds me of something I like to do outdoors."
+    - "[Alice] Mine is a pretty popular video game."
+    - "[Connor] Me too, Alice."
