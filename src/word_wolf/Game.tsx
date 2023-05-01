@@ -62,6 +62,8 @@ export const Game: React.FC<Props> = ({ languageModel }) => {
     return (
         <div className="w-full max-w-7xl h-full border p-4 shadow-lg rounded">
             <div>Your word: {humanPlayerWord(state)}</div>
+            <div>Bob's word: {playerWord(state, state.botPlayers[0])}</div>
+            <div>Alice's word: {playerWord(state, state.botPlayers[1])}</div>
             {state.phase === "chat" && <Chat state={state} onSubmit={onChatSubmit} />}
             {state.phase === "vote" && <Vote state={state} onSubmit={onVoteSubmit} />}
         </div>
