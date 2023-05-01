@@ -62,8 +62,8 @@ async function evaluateWerewolfGuess(testCase: TestCase) {
     const response = await promptChat(llm, chattingState);
 
     // correct guess: +1, incorrect guess: -1, indecisive: 0
-    const score = response.suspectedWerewolf === testCase.wolf ? 1
-        : playerNames.includes(response.suspectedWerewolf) ? -1
+    const score = response.likelyWerewolf === testCase.wolf ? 1
+        : playerNames.includes(response.likelyWerewolf) ? -1
             : 0;
     return { testDescription: testCase.description, score, response };
 }

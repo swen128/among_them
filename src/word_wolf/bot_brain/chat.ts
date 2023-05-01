@@ -9,6 +9,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         throw new Error("Cannot build prompt for player turn");
     }
 
+    const secretWord = playerWord(state, state.turn);
     const playerNames = state.players.map(p => p.name).join(", ");
     const chatLog: Prompt[] = state.chatLog.map(message => ({
         role: message.sender === state.turn ? "assistant" : "user",
@@ -37,14 +38,16 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         ${state.turn.characterDescription}
 
         # Your secret word
-        ${playerWord(state, state.turn)}
+        ${secretWord}
     `;
 
     const postInstrucions = dedent`
         # What you should do
         1. Summarize each other player's comments so far.
-        2. Guess who among the players (including you) is most likely the minority, explaining your logic step by step.
-        3. Think what you should say next.
+        2. Think if each of their topic align with yours (${secretWord}).
+        3. Guess whether you are the werewolf or not.
+            - When multiple people are talking about different topic from yours, you are most likely the werewolf.
+        4. Think what you should say next.
             - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
             - If you might be the minority, you must blend in by deducing the villagers' word and lying to avoid detection.
             - When you lack information, ask questions about the word to find out the werewolf.
@@ -52,7 +55,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         # Response format
         {
             "thoughts": "string",
-            "suspectedWerewolf": "string",
+            "likelyWerewolf": "one of the player names, or 'unknown'",
             "expectedWolfWord": "string",
             "expectedCommonWord": "string",
             "say": "string"
@@ -74,7 +77,7 @@ export function parseResponse(response: string) {
 
 const responseSchema = z.object({
     thoughts: z.string(),
-    suspectedWerewolf: z.string(),
+    likelyWerewolf: z.string(),
     expectedWolfWord: z.string(),
     expectedCommonWord: z.string(),
     say: z.string(),
