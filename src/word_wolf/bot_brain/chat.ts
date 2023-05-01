@@ -52,6 +52,9 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         # Response format
         {
             "thoughts": "string",
+            "suspectedWerewolf": "string",
+            "expectedWolfWord": "string",
+            "expectedCommonWord": "string",
             "say": "string"
         }
     `
@@ -71,6 +74,9 @@ export function parseResponse(response: string) {
 
 const responseSchema = z.object({
     thoughts: z.string(),
+    suspectedWerewolf: z.string(),
+    expectedWolfWord: z.string(),
+    expectedCommonWord: z.string(),
     say: z.string(),
 })
 
