@@ -10,10 +10,11 @@ export function buildPrompt(state: ChattingState): Prompt[] {
 
     const numVillagers = state.botPlayers.length;
     const playerNames = allPlayers(state).map(p => p.name).join(", ");
-    const chatLog = JSON.stringify(state.chatLog.map(message => ({
+    const chatLog: Prompt[] = state.chatLog.map(message => ({
+        role: message.sender === state.turn ? "assistant" : "user",
         name: message.sender.name,
-        text: message.text,
-    })))
+        content: message.text,
+    }))
 
     const instructions = dedent`
         You are playing a game of "Word Werewolf".
@@ -23,8 +24,6 @@ export function buildPrompt(state: ChattingState): Prompt[] {
 
         Each player is assigned a secret word.
         While the villagers share the common word, the werewolf has a different one.
-
-        Your word: "${playerWord(state, state.turn)}"
 
         Players engage in conversation to figure out their own roles and identify the werewolf.
         Although different, the two words have some similarities, such as "dog" and "cat",
@@ -37,26 +36,30 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         - Never say your secret word directly.
         - At first, give brief and vague description of the word. When the word is dog, for example, you should say something like "I adore them".
         - Ask questions about the word to find out the werewolf.
-        - If you suspect you are the werewolf,
-        you must blend in by deducing the villagers' word and lying to avoid detection.
-        - If you think you are a villager, give others hints that you know the common word,
-        while keeping the werewolf from guessing it.
+        - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
+        - If you think you are a villager, give others hints that you know the common word, while keeping the werewolf from guessing it.
 
         Players: ${playerNames}
 
         You act as ${state.turn.name}, whose character is as described below:
         ${state.turn.characterDescription}
+    `;
 
-        Chat log: ${chatLog}
+    const postInstrucions = dedent`
+        Your secret word: "${playerWord(state, state.turn)}"
 
-        Your turn to say something. You must respond in the following JSON format:
+        You must respond in the following JSON format:
         {
             "thoughts": "Who do you think is the werewolf? Why?",
             "say": "blah blah"
         }
-    `;
+    `
 
-    return [{ role: "user", content: instructions }];
+    return [
+        { role: "system", content: instructions },
+        ...chatLog,
+        { role: "system", content: postInstrucions },
+    ];
 }
 
 export type LanguageModelResponse = z.infer<typeof responseSchema>;

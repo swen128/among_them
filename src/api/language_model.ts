@@ -10,6 +10,7 @@ export interface LanguageModel {
 export interface Prompt {
     role: "system" | "user" | "assistant";
     content: string;
+    name?: string;
 }
 
 export class OpenAiChat implements LanguageModel {

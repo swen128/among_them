@@ -8,10 +8,11 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
 
     const numVillagers = state.botPlayers.length;
     const playerNames = allPlayers(state).map(p => p.name).join(", ");
-    const chatLog = JSON.stringify(state.chatLog.map(message => ({
+    const chatLog: Prompt[] = state.chatLog.map(message => ({
+        role: message.sender === player ? "assistant" : "user",
         name: message.sender.name,
-        text: message.text,
-    })))
+        content: message.text,
+    }))
 
     const instructions = dedent`
         You are playing a game of "Word Werewolf".
@@ -21,8 +22,6 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
 
         Each player is assigned a secret word.
         While the villagers share the common word, the werewolf has a different one.
-
-        Your word: "${playerWord(state, player)}"
 
         Players engage in conversation to figure out their own roles and identify the werewolf.
         Although different, the two words have some similarities, such as "dog" and "cat",
@@ -35,17 +34,17 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
         - Never say your secret word directly.
         - At first, give brief and vague description of the word. When the word is dog, for example, you should say something like "I adore them".
         - Ask questions about the word to find out the werewolf.
-        - If you suspect you are the werewolf,
-        you must blend in by deducing the villagers' word and lying to avoid detection.
-        - If you think you are a villager, give others hints that you know the common word,
-        while keeping the werewolf from guessing it.
+        - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
+        - If you think you are a villager, give others hints that you know the common word, while keeping the werewolf from guessing it.
 
         Players: ${playerNames}
 
         You act as ${player.name}, whose character is as described below:
         ${player.characterDescription}
+    `;
 
-        Chat log: ${chatLog}
+    const postInstrucions = dedent`
+        Your secret word: "${playerWord(state, player)}"
 
         Now it is the voting phase. You must respond in the following JSON format:
         {
@@ -54,7 +53,11 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
         }
     `;
 
-    return [{ role: "user", content: instructions }];
+    return [
+        { role: "system", content: instructions },
+        ...chatLog,
+        { role: "system", content: postInstrucions },
+    ];
 }
 
 const responseSchema = z.object({
