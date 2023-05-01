@@ -1,7 +1,8 @@
-import { z } from "zod";
-import { Prompt } from "../api/language_model";
-import { ChattingState, allPlayers, playerWord } from "./state";
 import dedent from "ts-dedent";
+import { z } from "zod";
+import { LanguageModel, Prompt } from "../api/language_model";
+import { jsonStringSchema } from "../utils";
+import { ChattingState, allPlayers, playerWord } from "./state";
 
 export function buildPrompt(state: ChattingState): Prompt[] {
     if (state.turn.type === "human") {
@@ -42,11 +43,11 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     const postInstrucions = dedent`
         # What you should do
         1. Summarize each other player's comments so far.
-        2. Guess who is most likely the minority (werewolf), explaining your logic step by step.
+        2. Guess who among the players (including you) is most likely the minority, explaining your logic step by step.
         3. Think what you should say next.
             - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
+            - If you might be the minority, you must blend in by deducing the villagers' word and lying to avoid detection.
             - When you lack information, ask questions about the word to find out the werewolf.
-            - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
 
         # Response format
         {
@@ -73,15 +74,7 @@ const responseSchema = z.object({
     say: z.string(),
 })
 
-/**
- * Zod schema for parsing JSON string
- */
-const jsonStringSchema = z.string()
-    .transform((str, ctx) => {
-        try {
-            return JSON.parse(str);
-        } catch (e) {
-            ctx.addIssue({ code: 'custom', message: 'Invalid JSON' });
-            return z.NEVER;
-        }
-    });
+async function prompt(languageModel: LanguageModel, state: ChattingState) {
+    const response = await languageModel.ask(buildPrompt(state));
+    return parseResponse(response);
+}
