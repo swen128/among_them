@@ -1,5 +1,5 @@
 import { dedent } from 'ts-dedent';
-import { Prompt } from "../api/language_model";
+import { Prompt } from "../api";
 
 export function gameMasterPrompt(keyword: string, question: string): Prompt[] {
     const instructions = dedent`

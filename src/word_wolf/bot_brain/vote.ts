@@ -1,8 +1,8 @@
-import dedent from "ts-dedent";
+import { dedent } from "ts-dedent";
 import { z } from "zod";
-import { LanguageModel, Prompt } from "../api/language_model";
-import { BotPlayer, Player, VotingState, allPlayers, playerWord } from "./state";
-import { jsonStringSchema } from "../utils";
+import { LanguageModel, Prompt } from "../../api";
+import { jsonStringSchema } from "../../utils";
+import { BotPlayer, Player, VotingState, allPlayers, playerWord } from "../state";
 
 function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
     const playerNames = allPlayers(state).map(p => p.name).join(", ");

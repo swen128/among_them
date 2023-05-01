@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
-import { LanguageModel } from '../api/language_model';
+import { LanguageModel } from '../api';
 import Chat from './Chat';
 import { gameMasterPrompt } from './gm_prompt';
 import { parseResponse, qaPhasePrompt } from './prompt';
@@ -10,7 +10,7 @@ interface Props {
     languageModel: LanguageModel;
 }
 
-const Game: React.FC<Props> = ({ languageModel }) => {
+export const Game: React.FC<Props> = ({ languageModel }) => {
     const userName = "Tom";
     const botPlayers: BotPlayer[] = [
         { type: "bot", name: "Bob", characterDescription: "A friendly guy" },
@@ -68,5 +68,3 @@ const Game: React.FC<Props> = ({ languageModel }) => {
         </div>
     );
 };
-
-export default Game;

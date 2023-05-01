@@ -1,8 +1,8 @@
-import dedent from "ts-dedent";
+import { dedent } from "ts-dedent";
 import { z } from "zod";
-import { LanguageModel, Prompt } from "../api/language_model";
-import { jsonStringSchema } from "../utils";
-import { ChattingState, allPlayers, playerWord } from "./state";
+import { LanguageModel, Prompt } from "../../api";
+import { jsonStringSchema } from "../../utils";
+import { ChattingState, allPlayers, playerWord } from "../state";
 
 export function buildPrompt(state: ChattingState): Prompt[] {
     if (state.turn.type === "human") {
@@ -63,7 +63,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
     ];
 }
 
-export type LanguageModelResponse = z.infer<typeof responseSchema>;
+export type ChatResponse = z.infer<typeof responseSchema>;
 
 export function parseResponse(response: string) {
     return jsonStringSchema.pipe(responseSchema).safeParse(response);
@@ -74,7 +74,12 @@ const responseSchema = z.object({
     say: z.string(),
 })
 
-async function prompt(languageModel: LanguageModel, state: ChattingState) {
+export async function promptChat(languageModel: LanguageModel, state: ChattingState): Promise<ChatResponse> {
     const response = await languageModel.ask(buildPrompt(state));
-    return parseResponse(response);
+    const result = parseResponse(response);
+    
+    if (!result.success) {
+        throw Error(`Failed to parse response: ${result.error.message}`);
+    }
+    return result.data;
 }

@@ -1,33 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
-import { LanguageModel } from '../api/language_model';
+import { LanguageModel } from '../api';
 import Chat from './Chat';
 import Vote from './Vote';
-import { buildPrompt, parseResponse } from './prompt';
-import { promptVote } from './prompt_voting';
-import { BotPlayer, ChattingState, GameState, HumanPlayer, Player, VotingState, humanPlayerWord, initialState, isBotVoteComplete, isPlayerTurn, isVoteComplete, withNewChatMessage, withNewVote } from './state';
+import { promptChat, promptVote } from './bot_brain';
+
+import { BotPlayer, ChattingState, GameState, HumanPlayer, Player, VotingState, humanPlayerWord, initialState, isBotVoteComplete, isPlayerTurn, isVoteComplete, playerWord, withNewChatMessage, withNewVote } from './state';
 
 interface Props {
     languageModel: LanguageModel;
 }
 
-const Game: React.FC<Props> = ({ languageModel }) => {
+export const Game: React.FC<Props> = ({ languageModel }) => {
     const userName = "Tom";
     const [state, setState] = useState(initial(userName));
 
     const [llmState, askLlm] = useAsyncFn(async (state: ChattingState) => {
-        const prompt = buildPrompt(state);
-        const response = await languageModel.ask(prompt);
-        const result = parseResponse(response);
+        const response = await promptChat(languageModel, state);
 
-        if (!result.success) {
-            console.error("Failed to parse response", result);
-            return;
-        }
+        console.log(`${state.turn.name}'s thoughts: ${response.thoughts}`)
 
-        console.log(`${state.turn.name}'s thoughts: ${result.data.thoughts}`)
-
-        setState(withNewChatMessage(state, result.data.say));
+        setState(withNewChatMessage(state, response.say));
     }, [languageModel]);
 
     useEffect(() => {
@@ -85,5 +78,3 @@ function initial(userName: string): GameState {
     const werewolf = players[Math.floor(Math.random() * players.length)];
     return initialState(humanPlayer, botPlayers, werewolf);
 }
-
-export default Game;

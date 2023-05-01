@@ -1,7 +1,7 @@
-import './style.css'
-import Game from './insider/Game'
-import { OpenAiChat } from './api/language_model'
 import { useState } from 'react';
+import { OpenAiChat } from './api';
+import './style.css';
+import { WordWolf } from './word_wolf';
 
 function App() {
   const [apiKey, setApiKey] = useState(import.meta.env.VITE_OPENAI_API_KEY || "")
@@ -20,7 +20,7 @@ function App() {
           />
         </div>
 
-        <Game languageModel={llm} />
+        <WordWolf languageModel={llm} />
       </div>
     </>
   )

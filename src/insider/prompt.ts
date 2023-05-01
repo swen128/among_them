@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Prompt } from "../api/language_model";
+import { Prompt } from "../api";
 import { QuestionState } from "./state";
 import { dedent } from 'ts-dedent';
 import { jsonStringSchema } from "../utils";
