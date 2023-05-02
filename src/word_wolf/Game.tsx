@@ -21,7 +21,11 @@ export const Game: React.FC<Props> = ({ languageModel }) => {
     const [llmState, askLlm] = useAsyncFn(async (state: ChattingState) => {
         const response = await promptChat(languageModel, state);
 
-        console.log(`${state.turn.name}'s thoughts: ${response.thoughts}`)
+        console.log(`${state.turn.name}'s thoughts: ${{
+            summary: response.wordsSummary,
+            thoughts: response.thoughts,
+            guess: response.mostLikelyGuess,
+        }}`);
 
         setState(withNewChatMessage(state, response.say));
     }, [languageModel]);
