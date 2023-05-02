@@ -53,7 +53,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
             - If you might be the minority, you must blend in by deducing the villagers' word and lying to avoid detection.
             - When you lack information, ask questions about the word to find out the werewolf.
 
-        # Response format
+        # Response format (all the JSON fields are required)
         {
             "wordsSummary": {
                 "Kara": "dog",
