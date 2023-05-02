@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ChatLog from './ChatLog';
-import { Player, VotingState, isBotVoteComplete, isVoteComplete, votes } from './state';
 import VoteInput from './VoteInput';
+import { Player, VotingState, isBotVoteComplete, isVoteComplete, votes } from './state';
 
 interface Props {
     state: VotingState;
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Vote: React.FC<Props> = ({ state, onSubmit }) => {
-    const options = state.botPlayers;
+    const options = state.players.filter(p => p.type === "bot");
 
     const [value, setValue] = useState<Player>(options[0]);
 
