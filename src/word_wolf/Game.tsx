@@ -75,8 +75,8 @@ export const Game: React.FC<Props> = ({ languageModel }) => {
 
 function initial(humanPlayer: HumanPlayer): GameState {
     const botPlayers: BotPlayer[] = [
-        { type: "bot", name: "Bob", characterDescription: "A friendly guy" },
-        { type: "bot", name: "Alice", characterDescription: "A cool woman" },
+        { type: "bot", name: "Bob", characterDescription: "A confident, experienced Word Werewolf player" },
+        { type: "bot", name: "Alice", characterDescription: "A confident, experienced Word Werewolf player" },
     ];
     const players = [...botPlayers, humanPlayer];
     const werewolf = players[Math.floor(Math.random() * players.length)];

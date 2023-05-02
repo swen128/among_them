@@ -47,6 +47,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         2. Think if each of their topic align with yours (${secretWord}).
         3. Guess whether you are the werewolf or not.
             - When multiple people are talking about different topic from yours, you are most likely the werewolf.
+            - When someone agrees with your topic, you (and that person) are probably not the werewolf.
         4. Think what you should say next.
             - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
             - If you might be the minority, you must blend in by deducing the villagers' word and lying to avoid detection.
