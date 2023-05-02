@@ -12,15 +12,24 @@ const llm = new OpenAiChat(apiKey);
 
 const delay = (ms: number): Promise<void> => {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  };
+};
 
 async function main() {
     const testCases = testCasesSchema.parse(yaml.load(fs.readFileSync("./scripts/data.yml", "utf-8")));
 
+    const promises: Promise<{score: number}>[] = [];
     for (const testCase of testCases) {
-        evaluateWerewolfGuess(testCase).then(console.log);
+        const promise = evaluateWerewolfGuess(testCase);
+        promise.then(console.log).catch(console.error);
+        promises.push(promise)
         await delay(1000);
     }
+
+    const results = await Promise.all(promises);
+    const totalScore = results.reduce((acc, result) => acc + result.score, 0);
+    const averageScore = totalScore / testCases.length;
+
+    console.log(`Score: ${averageScore}`);
 }
 
 const chatMessageSchema = z.string().transform(message => {
@@ -60,10 +69,11 @@ async function evaluateWerewolfGuess(testCase: TestCase) {
     }
 
     const response = await promptChat(llm, chattingState);
+    const werewolfGuess = response.mostLikelyGuess.werewolf;
 
     // correct guess: 1, incorrect guess: 0, indecisive: 0.3
-    const score = response.likelyWerewolf === testCase.wolf ? 1
-        : playerNames.includes(response.likelyWerewolf) ? 0
+    const score = werewolfGuess === testCase.wolf ? 1
+        : playerNames.includes(werewolfGuess) ? 0
             : 0.3;
     return { testDescription: testCase.description, score, response };
 }

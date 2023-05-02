@@ -1,4 +1,14 @@
-- description: The wolf is immediately exposed.
+- description: Every players explicitly say their words, so it's trivial to guess the werewolf.
+  commonWord: Minecraft
+  wolfWord: bike
+  wolf: Bob
+  next: Bob
+  chatLog:
+    - "[Bob] My word is 'bike'."
+    - "[Alice] Mine is 'Minecraft'."
+    - "[Connor] My word is also 'Minecraft'."
+
+- description: The wolf is immediately exposed. (wolf side)
   commonWord: Minecraft
   wolfWord: bike
   wolf: Bob
@@ -8,7 +18,7 @@
     - "[Alice] Mine is a pretty popular video game."
     - "[Connor] Me too, Alice."
 
-- description: The wolf is immediately exposed.
+- description: The wolf is immediately exposed. (villager side)
   commonWord: Minecraft
   wolfWord: bike
   wolf: Bob
@@ -17,3 +27,40 @@
     - "[Bob] My word reminds me of something I like to do outdoors."
     - "[Alice] Mine is a pretty popular video game."
     - "[Connor] Me too, Alice."
+
+- description: Less obvious. (wolf side)
+  commonWord: Minecraft
+  wolfWord: bike
+  wolf: Bob
+  next: Bob
+  chatLog:
+    - "[Bob] I really enjoy using my word. It's a fun activity."
+    - "[Alice] I find my word really engaging and it allows me to be creative"
+    - "[Connor] I love building stuffs in this."
+
+- description: Less obvious. (villager side)
+  commonWord: Minecraft
+  wolfWord: bike
+  wolf: Bob
+  next: Alice
+  chatLog:
+    - "[Bob] I really enjoy using my word. It's a fun activity."
+    - "[Alice] I find my word really engaging and it allows me to be creative"
+    - "[Connor] I love building stuffs in this."
+    - "[Bob] It's also an environmentally friendly way to travel. What do you guys prefer about your words?"
+
+- description: Longer conversation.
+  commonWord: Minecraft
+  wolfWord: bike
+  wolf: Alice
+  next: Bob
+  chatLog:
+    - "[Bob] Ah, I spent a lot of time on this in the past."
+    - "[Alice] I enjoy this activity as well, especially during warmer weather."
+    - "[Connor] I play this at home."
+    - "[Bob] Do you guys prefer playing alone or with others?"
+    - "[Alice] Do you prefer doing this activity indoors or outdoors?"
+    - "[Connor] Mine is more about indoor thing."
+    - "[Bob] I like the creativity and endless possibilities in it."
+    - "[Alice] Is it something that requires any specific equpment or tools?"
+    - "[Connor] I love building things in it, too, Bob."
