@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { Configuration, OpenAIApi } from "openai";
+import { Configuration, CreateChatCompletionRequest, OpenAIApi } from "openai";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "./language_model";
 
@@ -13,12 +13,9 @@ export class OpenAiChat implements LanguageModel {
         this.openai = new OpenAIApi(conf);
     }
 
-    async ask(messages: Prompt[]): Promise<string> {
+    private async request(request: CreateChatCompletionRequest): Promise<string> {
         try {
-            const response = await this.openai.createChatCompletion({
-                model: "gpt-4",
-                messages: messages,
-            });
+            const response = await this.openai.createChatCompletion(request);
             const answer = response.data.choices[0].message?.content ?? "";
             return answer;
         } catch (e: unknown) {
@@ -27,6 +24,20 @@ export class OpenAiChat implements LanguageModel {
             }
             throw e;
         }
+    }
+
+    async ask(messages: Prompt[]): Promise<string> {
+        return this.request({
+            messages,
+            model: "gpt-4",
+        });
+    }
+
+    async askFast(messages: Prompt[]): Promise<string> {
+        return this.request({
+            messages,
+            model: "gpt-3.5-turbo",
+        });
     }
 }
 
