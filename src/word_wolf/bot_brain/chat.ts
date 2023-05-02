@@ -55,11 +55,18 @@ export function buildPrompt(state: ChattingState): Prompt[] {
 
         # Response format
         {
-            "thoughts": "string",
-            "likelyWerewolf": "one of the player names, or 'unknown'",
-            "expectedWolfWord": "string",
-            "expectedCommonWord": "string",
-            "say": "string"
+            "wordsSummary": {
+                "Kara": "dog",
+                "Markus": "He had one as pet. Walks silently.",
+                "Connor": "Cute, agile, and independent animal."
+            },
+            "thoughts": "Markus said it 'walks silently', which sounds more like 'cat' than 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', and I am the werewolf. I should pretend to be a villager by talking about cat.",
+            "mostLikelyGuess": {
+                "commonWord": "cat",
+                "wolfWord": "dog",
+                "werewolf": "Kara"
+            },
+            "say": "They love high places, don't they?"
         }
     `
 
@@ -77,10 +84,13 @@ export function parseResponse(response: string) {
 }
 
 const responseSchema = z.object({
+    wordsSummary: z.record(z.string()),
     thoughts: z.string(),
-    likelyWerewolf: z.string(),
-    expectedWolfWord: z.string(),
-    expectedCommonWord: z.string(),
+    mostLikelyGuess: z.object({
+        commonWord: z.string(),
+        wolfWord: z.string(),
+        werewolf: z.string(),
+    }),
     say: z.string(),
 })
 
