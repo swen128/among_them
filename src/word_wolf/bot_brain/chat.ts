@@ -41,6 +41,21 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         ${secretWord}
     `;
 
+    const responseExample = {
+        wordsSummary: {
+            "Kara (me)": "'dog'",
+            "Markus": "He had one as pet. Walks silently.",
+            "Connor": "Cute, agile, and independent animal."
+        },
+        thoughts: "Markus said it 'walks silently', which sounds more like 'cat' than 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', and I am the werewolf. I should pretend to be a villager by talking about cat.",
+        mostLikelyGuess: {
+            "commonWord": "cat",
+            "wolfWord": "dog",
+            "werewolf": "Kara"
+        },
+        say: "They love high places, don't they?"
+    }
+
     const postInstrucions = dedent`
         # What you should do
         1. Summarize each other player's comments so far.
@@ -53,21 +68,9 @@ export function buildPrompt(state: ChattingState): Prompt[] {
             - If you might be the minority, you must blend in by deducing the villagers' word and lying to avoid detection.
             - When you lack information, ask questions about the word to find out the werewolf.
 
-        # Response format (all the JSON fields are required)
-        {
-            "wordsSummary": {
-                "Kara": "dog",
-                "Markus": "He had one as pet. Walks silently.",
-                "Connor": "Cute, agile, and independent animal."
-            },
-            "thoughts": "Markus said it 'walks silently', which sounds more like 'cat' than 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', and I am the werewolf. I should pretend to be a villager by talking about cat.",
-            "mostLikelyGuess": {
-                "commonWord": "cat",
-                "wolfWord": "dog",
-                "werewolf": "Kara"
-            },
-            "say": "They love high places, don't they?"
-        }
+        # Response format
+        All the JSON fields are required.
+        ${JSON.stringify(responseExample)}}
     `
 
     return [

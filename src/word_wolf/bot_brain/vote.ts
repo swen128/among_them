@@ -45,10 +45,7 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
             - If not, vote for the would-be werewolf.
         
         # Response format
-        {
-            "thoughts": "string",
-            "votedPlayerName": "string"
-        }
+        {"thoughts": "string", "votedPlayerName": "string"}
     `;
 
     return [
