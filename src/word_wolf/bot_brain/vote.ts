@@ -2,7 +2,7 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { BotPlayer, Player, VotingState, playerWord } from "../state";
+import { BotPlayer, VotedResult, VotingState, playerWord } from "../state";
 
 function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
     const playerNames = state.players.map(p => p.name).join(", ");
@@ -64,14 +64,12 @@ function parseVotingResponse(response: string) {
     return jsonStringSchema.pipe(responseSchema).safeParse(response);
 }
 
-async function promptVoteUnsafe(lm: LanguageModel, state: VotingState, voter: BotPlayer): Promise<Player> {
+export async function promptVote(lm: LanguageModel, state: VotingState, voter: BotPlayer): Promise<VotedResult> {
     const rawResponse = await lm.ask(buildVotingPrompt(state, voter));
     const response = parseVotingResponse(rawResponse);
     if (!response.success) {
         throw new Error(`Invalid response format: ${response.error}`);
     }
-
-    console.log(`${voter.name}' thoughts: ${response.data.thoughts}`);
 
     const votedName = response.data.votedPlayerName;
     const voted = state.players.find(p => p.name === votedName);
@@ -79,27 +77,5 @@ async function promptVoteUnsafe(lm: LanguageModel, state: VotingState, voter: Bo
         throw new Error(`Invalid player name: ${votedName}`);
     }
 
-    return voted;
+    return { voted, reason: response.data.thoughts };
 }
-
-function randomVote(state: VotingState, voter: BotPlayer): Player {
-    const players = state.players;
-    const voterIndex = players.indexOf(voter);
-
-    const i = Math.floor(Math.random() * players.length - 1);
-    const votedIndex = i < voterIndex ? i : i + 1;
-
-    return state.players[votedIndex];
-}
-
-export const promptVote = (lm: LanguageModel, maxRetries: number, state: VotingState) =>
-    async (voter: BotPlayer): Promise<Player> => {
-        for (let i = 0; i < maxRetries; i++) {
-            try {
-                return await promptVoteUnsafe(lm, state, voter);
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        return randomVote(state, voter);
-    }

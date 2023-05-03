@@ -14,11 +14,16 @@ export interface ChattingState extends BaseGameState {
 
 export interface VotingState extends BaseGameState {
     phase: "vote";
-    votes: Map<Player, Player | undefined>;
+    votes: Map<Player, VotedResult | undefined>;
+}
+
+export interface VotedResult {
+    voted: Player;
+    reason: string;
 }
 
 function votingState(state: ChattingState): VotingState {
-    const votes = new Map<Player, Player | undefined>();
+    const votes = new Map<Player, VotedResult | undefined>();
     for (const player of state.players) {
         votes.set(player, undefined);
     }
@@ -84,21 +89,22 @@ export function isBotVoteComplete(state: GameState): boolean {
             .every(([, voted]) => voted !== undefined);
 }
 
-export function votes(state: VotingState): { voter: Player, voted: Player }[] {
+export function votes(state: VotingState): { voter: Player, result: VotedResult }[] {
     return [...state.votes.entries()]
-        .filter(([, voted]) => voted !== undefined)
-        .map(([voter, voted]) => ({ voter, voted: voted as Player }));
+        .filter(([, result]) => result !== undefined)
+        .map(([voter, result]) => ({ voter, result: result! }));
 }
 
-export function withNewVote(state: VotingState, voter: Player, voted: Player): VotingState {
+export function withNewVote(state: VotingState, voter: Player, vote: VotedResult): VotingState {
     const votes = new Map(state.votes);
-    votes.set(voter, voted);
+    votes.set(voter, vote);
     return { ...state, votes };
 }
 
 export function counts(state: VotingState): Map<Player, number> {
     const votedPlayers = [...state.votes.values()]
-        .filter(voted => voted !== undefined) as Player[];
+        .filter(result => result !== undefined)
+        .map(result => result!.voted);
 
     const counts = new Map<Player, number>();
     for (const player of votedPlayers) {

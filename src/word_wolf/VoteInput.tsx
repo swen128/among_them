@@ -1,4 +1,3 @@
-// src/Chat.tsx
 import React from 'react';
 import { Player } from './state';
 

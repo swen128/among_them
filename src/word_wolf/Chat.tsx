@@ -1,4 +1,3 @@
-// src/Chat.tsx
 import React, { useState } from 'react';
 import ChatLog from './ChatLog';
 import { ChattingState } from './state';

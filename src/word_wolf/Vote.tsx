@@ -19,7 +19,7 @@ const Vote: React.FC<Props> = ({ state, onSubmit }) => {
     };
 
     const voteProgress = isVoteComplete(state)
-        ? votes(state).map(({ voter, voted }) => <li key={voter.name}>{voter.name} voted for {voted.name}</li>)
+        ? votes(state).map(({ voter, result }) => <li key={voter.name}>{voter.name} voted for {result.voted.name}</li>)
         : isBotVoteComplete(state)
             ? <div>Awaiting your vote...</div>
             : <div>Awaiting votes from the other players...</div>;
