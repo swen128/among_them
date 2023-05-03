@@ -1,1 +1,1 @@
-export { Game as WordWolf } from "./Game";
+export { WordWolf } from "./WordWolf";
