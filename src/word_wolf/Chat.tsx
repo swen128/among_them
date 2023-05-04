@@ -23,7 +23,7 @@ const Chat: React.FC<Props> = ({ state, onSubmit }) => {
             <ChatLog state={state} />
             <form onSubmit={handleSubmit} className="border-t p-4">
                 <input
-                    className="focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block appearance-none leading-normal w-full"
+                    className="border border-gray-300 rounded-lg py-2 px-4 block appearance-none leading-normal w-full"
                     type="text"
                     placeholder={canSubmit ? "Type your message..." : "The bot is thinking..."}
                     value={inputValue}

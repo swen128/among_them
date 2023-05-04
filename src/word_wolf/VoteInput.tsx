@@ -16,6 +16,7 @@ const VoteInput: React.FC<Props> = ({ value, options, onChange }) => {
 
     return (
         <select
+            className='border border-gray-300 rounded-lg p-2.5 w-full'
             value={value?.name}
             onChange={handleChange}
         >

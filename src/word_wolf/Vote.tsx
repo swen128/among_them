@@ -28,9 +28,14 @@ const Vote: React.FC<Props> = ({ state, onSubmit }) => {
         <div className="flex flex-col h-full">
             {voteProgress}
             <ChatLog state={state} />
-            <form onSubmit={handleSubmit} className="border-t p-4">
+            <form onSubmit={handleSubmit} className="border-t p-4 flex gap-4">
                 <VoteInput value={value} options={options} onChange={setValue} />
-                <button type='submit'>Vote</button>
+                <button
+                    type='submit'
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Vote
+                </button>
             </form>
         </div>
     );
