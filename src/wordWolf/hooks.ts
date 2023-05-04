@@ -82,7 +82,7 @@ const promptChat_ = async (languageModel: LanguageModel, state: ChattingState): 
         const response = await retryUnsafe(maxRetries, () => promptChat(languageModel, state));
 
         console.log(`${state.turn.name}'s thoughts: ${response.thoughts}`);
-        console.log(`${state.turn.name}'s guess of werewolf: ${response.mostLikelyGuess.werewolf}`);
+        console.log(`${state.turn.name}'s guess of werewolf: ${response.likelyWerewolf}`);
         console.log(response);
 
         return response.say;

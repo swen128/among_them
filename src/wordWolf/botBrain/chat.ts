@@ -3,52 +3,65 @@ import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
 import { ChattingState, playerWord } from "../state";
-import { chatLog, genericInstructions } from "./common";
 
 export function buildPrompt(state: ChattingState): Prompt[] {
     const player = state.turn;
-    const secretWord = playerWord(state, player);
 
     if (player.type === "human") {
         throw new Error("Cannot build prompt for player turn");
     }
 
-    const responseExample: ChatResponse = {
-        wordsSummary: {
-            "Kara (me)": "'dog'",
-            "Markus": "He had one as pet. Walks silently.",
-            "Connor": "Cute, agile, and independent animal."
-        },
-        thoughts: "Markus said it 'walks silently', which sounds more like 'cat' than 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', and I am the werewolf. I should pretend to be a villager by talking about cat.",
-        mostLikelyGuess: {
-            commonWord: "cat",
-            wolfWord: "dog",
-            werewolf: "Kara"
-        },
-        say: "They love high places, don't they?"
-    }
+    const numVillagers = state.players.length - 1;
+    const playerNames = state.players.map(p => p.name).join(", ");
+    const chatLog: Prompt[] = state.chatLog.map(message => ({
+        role: message.sender === state.turn ? "assistant" : "user",
+        name: message.sender.name,
+        content: message.text,
+    }))
 
-    const instrucions = dedent`
-        # What you should do
-        1. Summarize each other player's comments so far.
-        2. Think if each of their topic align with yours (${secretWord}).
-        3. Guess whether you are the werewolf or not.
-            - When multiple people are talking about different topic from yours, you are most likely the werewolf.
-            - When someone agrees with your topic, you (and that person) are probably not the werewolf.
-        4. Think what you should say next.
-            - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
-            - If you might be the minority, you must blend in by deducing the villagers' word and lying to avoid detection.
-            - When you lack information, ask questions about the word to find out the werewolf.
+    const instructions = dedent`
+        You are playing a game of "Word Werewolf".
 
-        # Response format
-        All the JSON fields are required.
-        ${JSON.stringify(responseExample)}}
+        There are ${numVillagers} villagers and 1 werewolf in the game.
+        In the beginning, the players are unaware of their own roles.
+
+        Each player is assigned a secret word.
+        While the villagers share the common word, the werewolf has a different one.
+
+        Players engage in conversation to figure out their own roles and identify the werewolf.
+        Although different, the two words have some similarities, such as "dog" and "cat",
+        so that the werewolf would not immediately be apparent.
+
+        After the conversation, players vote to execute someone.
+        If the werewolf is executed, the villagers win; if a villager is executed, the werewolf wins.
+
+        Here are some tips:
+        - At first, give brief and vague description of the word. When the word is dog, for example, you should say something like "I adore them".
+        - Ask questions about the word to find out the werewolf.
+        - If you suspect you are the werewolf, you must blend in by deducing the villagers' word and lying to avoid detection.
+        - If you think you are a villager, give others hints that you know the common word, while keeping the werewolf from guessing it.
+
+        Players: ${playerNames}
+
+        You act as ${state.turn.name}, whose character is as described below:
+        ${player.characterDescription}
+    `;
+
+    const postInstrucions = dedent`
+        Your secret word: "${playerWord(state, state.turn)}"
+
+        You must respond in the following JSON format:
+        {
+            "thoughts": "Summarize each other's comments and guess what they are talking about. Who do you think is the werewolf? (It might be you!)",
+            "likelyWerewolf": "one of the player names",
+            "say": "blah blah"
+        }
     `
 
     return [
-        genericInstructions(state, player),
-        ...chatLog(state, player),
-        { role: "system", content: instrucions },
+        { role: "system", content: instructions },
+        ...chatLog,
+        { role: "system", content: postInstrucions },
     ];
 }
 
@@ -59,13 +72,8 @@ function parseResponse(response: string) {
 }
 
 const responseSchema = z.object({
-    wordsSummary: z.record(z.string()),
     thoughts: z.string(),
-    mostLikelyGuess: z.object({
-        commonWord: z.string(),
-        wolfWord: z.string(),
-        werewolf: z.string(),
-    }),
+    likelyWerewolf: z.string(),
     say: z.string(),
 })
 
