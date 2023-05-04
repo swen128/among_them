@@ -120,6 +120,7 @@ function retry<T>(maxRetries: number, func: () => Promise<T>, fallback: () => T)
 function retryUnsafe<T>(maxRetries: number, func: () => Promise<T>): Promise<T> {
     return func().catch(e => {
         if (maxRetries <= 0) throw e;
+        console.warn(e);
         return retryUnsafe(maxRetries - 1, func);
     });
 }
