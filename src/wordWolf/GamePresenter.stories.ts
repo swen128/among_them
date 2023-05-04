@@ -19,7 +19,7 @@ const connor: BotPlayer = { name: 'Connor', type: 'bot', characterDescription: '
 const players = [markus, kara, connor];
 const wolf = markus;
 const state: ChattingState = {
-    ...initialState(players, wolf),
+    ...initialState({ players, wolf, wolfWord: 'wolf', commonWord: 'dog' }),
     chatLog: [
         { sender: markus, text: 'Lorem' },
         { sender: kara, text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vehicula massa ac velit euismod scelerisque. Nullam ac posuere tortor. Cras facilisis, velit non fringilla mollis, eros enim vestibulum ipsum, ac venenatis massa tortor sit amet felis.' },
