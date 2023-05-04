@@ -12,7 +12,7 @@ const ChatBubble: React.FC<Props> = ({ sender, children }) => {
         : 'bg-gray-200 text-gray-800 float-right';
 
     return (
-        <div className={`p-4 my-2 rounded-lg ${bubbleStyle} max-w-6xl clear-both`}>
+        <div className={`p-4 my-2 rounded-lg ${bubbleStyle} max-w-[85%] clear-both`}>
             <p className="font-bold">{sender.name}</p>
             <p></p>{children}
         </div>
