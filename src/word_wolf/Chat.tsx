@@ -20,7 +20,7 @@ const Chat: React.FC<Props> = ({ state, onSubmit }) => {
     return (
         <div className="flex flex-col h-full">
             <div>Remaining turns: {state.remainingTurns}</div>
-            <ChatLog log={state.chatLog} />
+            <ChatLog state={state} />
             <form onSubmit={handleSubmit} className="border-t p-4">
                 <input
                     className="focus:outline-none focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block appearance-none leading-normal w-full"

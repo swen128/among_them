@@ -27,7 +27,7 @@ const Vote: React.FC<Props> = ({ state, onSubmit }) => {
     return (
         <div className="flex flex-col h-full">
             {voteProgress}
-            <ChatLog log={state.chatLog} />
+            <ChatLog state={state} />
             <form onSubmit={handleSubmit} className="border-t p-4">
                 <VoteInput value={value} options={options} onChange={setValue} />
                 <button type='submit'>Vote</button>
