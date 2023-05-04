@@ -123,15 +123,17 @@ export function executedPlayers(state: VotingState): Player[] {
         .map(([player]) => player);
 }
 
-export function initialState(players: Player[], wolf: Player): ChattingState {
+export function initialState(options: {
+    players: Player[],
+    wolf: Player,
+    wolfWord: string,
+    commonWord: string,
+}): ChattingState {
     return {
+        ...options,
         chatLog: [],
-        players,
         phase: "chat",
-        turn: players[0],
-        remainingTurns: players.length * 4,
-        commonWord: "Minecraft",
-        wolfWord: "bike",
-        wolf,
+        turn: options.players[0],
+        remainingTurns: options.players.length * 4,
     };
 }

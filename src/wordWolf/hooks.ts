@@ -3,6 +3,7 @@ import { useAsyncFn } from 'react-use';
 import { LanguageModel } from "../api";
 import { promptChat, promptVote } from './botBrain';
 import { BotPlayer, ChattingState, GameState, HumanPlayer, Player, VotedResult, VotingState, initialState, isBot, isBotVoteComplete, isPlayerTurn, isVoteComplete, withNewChatMessage, withNewVote } from './state';
+import { getRandomWordPair } from './wordPairs';
 
 function useGame(initialState: GameState) {
     const [state, setState] = useState(initialState);
@@ -22,7 +23,7 @@ function useGame(initialState: GameState) {
 
 export function useSinglePlayerGame(languageModel: LanguageModel, userName: string) {
     const humanPlayer: HumanPlayer = { type: "human", name: userName };
-    const initialState = initial(humanPlayer);
+    const initialState = bootStrap(humanPlayer);
     const { state, submitChat, submitVote } = useGame(initialState);
 
     const botPlayers = state.players.filter(isBot);
@@ -64,14 +65,15 @@ export function useSinglePlayerGame(languageModel: LanguageModel, userName: stri
     };
 }
 
-function initial(humanPlayer: HumanPlayer): GameState {
+function bootStrap(humanPlayer: HumanPlayer): GameState {
     const botPlayers: BotPlayer[] = [
         { type: "bot", name: "Bob", characterDescription: "A confident, experienced Word Werewolf player" },
         { type: "bot", name: "Alice", characterDescription: "A confident, experienced Word Werewolf player" },
     ];
     const players = [...botPlayers, humanPlayer];
-    const werewolf = players[Math.floor(Math.random() * players.length)];
-    return initialState(players, werewolf);
+    const wolf = players[Math.floor(Math.random() * players.length)];
+    const [wolfWord, commonWord] = getRandomWordPair();
+    return initialState({ players, wolf, wolfWord, commonWord });
 }
 
 const promptChat_ = async (languageModel: LanguageModel, state: ChattingState): Promise<string> => {
