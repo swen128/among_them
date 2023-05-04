@@ -2,39 +2,14 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { BotPlayer, VotedResult, VotingState, playerWord } from "../state";
+import { BotPlayer, VotedResult, VotingState } from "../state";
+import { chatLog, genericInstructions } from "./common";
 
 function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
-    const playerNames = state.players.map(p => p.name).join(", ");
-    const chatLog: Prompt[] = state.chatLog.map(message => ({
-        role: message.sender === player ? "assistant" : "user",
-        name: message.sender.name,
-        content: message.text,
-    }))
-
-    const instructions = dedent`
-        # Game rules
-        You are playing a game of "Word Werewolf".
-
-        There is one werewolf among the players.
-        Each player is given a secret word--the majority (villagers) shares a common word, while the werewolf has a different one.
-        No one (even the werewolf himself) knows who is the werewolf, so you have to talk about your secret words to find out.
-        
-        The players then vote to execute someone. The villagers win if the werewolf is executed; otherwise the werewolf wins.
-
-        Giving away too much information would help the werewolf to blend in, or expose yourself if you are the werewolf.
-        On the other hand, you cannot make correct guess if you don't talk enough.
-
-        # Players
-        ${playerNames}
-
-        # Your character
-        You act as ${player.name}, whose character is as described below:
-        ${player.characterDescription}
-
-        # Your secret word
-        ${playerWord(state, player)}
-    `;
+    const responseExample: VotingResponse = {
+        thoughts: "string",
+        votedPlayerName: "string",
+    };
 
     const postInstrucions = dedent`
         # What you should do
@@ -45,15 +20,17 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
             - If not, vote for the would-be werewolf.
         
         # Response format
-        {"thoughts": "string", "votedPlayerName": "string"}
+        ${JSON.stringify(responseExample)}
     `;
 
     return [
-        { role: "system", content: instructions },
-        ...chatLog,
+        genericInstructions(state, player),
+        ...chatLog(state, player),
         { role: "system", content: postInstrucions },
     ];
 }
+
+type VotingResponse = z.infer<typeof responseSchema>;
 
 const responseSchema = z.object({
     thoughts: z.string(),
