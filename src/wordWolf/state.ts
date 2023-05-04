@@ -14,7 +14,7 @@ export interface ChattingState extends BaseGameState {
 
 export interface VotingState extends BaseGameState {
     phase: "vote";
-    votes: Map<Player, VotedResult | undefined>;
+    votes: Map<string, VotedResult | undefined>;
 }
 
 export interface VotedResult {
@@ -23,9 +23,9 @@ export interface VotedResult {
 }
 
 function votingState(state: ChattingState): VotingState {
-    const votes = new Map<Player, VotedResult | undefined>();
+    const votes = new Map<string, VotedResult | undefined>();
     for (const player of state.players) {
-        votes.set(player, undefined);
+        votes.set(player.name, undefined);
     }
     return { ...state, phase: "vote", votes };
 }
@@ -84,20 +84,29 @@ export function isVoteComplete(state: GameState): boolean {
 
 export function isBotVoteComplete(state: GameState): boolean {
     return state.phase === "vote" &&
-        [...state.votes.entries()]
-            .filter(([voter]) => voter.type === "bot")
-            .every(([, voted]) => voted !== undefined);
+        allVotes(state).every(({ voter, result }) => !isBot(voter) || result !== undefined);
+}
+
+function allVotes(state: VotingState): { voter: Player, result: VotedResult | undefined }[] {
+    return [...state.votes.entries()]
+        .map(([voterName, result]) => ({
+            voter: state.players.find(p => p.name === voterName)!,
+            result,
+        }));
 }
 
 export function votes(state: VotingState): { voter: Player, result: VotedResult }[] {
     return [...state.votes.entries()]
         .filter(([, result]) => result !== undefined)
-        .map(([voter, result]) => ({ voter, result: result! }));
+        .map(([voterName, result]) => ({
+            voter: state.players.find(p => p.name === voterName)!,
+            result: result!
+        }));
 }
 
 export function withNewVote(state: VotingState, voter: Player, vote: VotedResult): VotingState {
     const votes = new Map(state.votes);
-    votes.set(voter, vote);
+    votes.set(voter.name, vote);
     return { ...state, votes };
 }
 

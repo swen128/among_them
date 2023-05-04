@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { GamePresenter } from './GamePresenter';
-import { BotPlayer, ChattingState, HumanPlayer, Player, initialState } from './state';
+import { BotPlayer, ChattingState, HumanPlayer, initialState } from './state';
 
 const meta = {
     component: GamePresenter,
@@ -29,10 +29,10 @@ const state: ChattingState = {
         { sender: kara, text: 'この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。' },
     ],
 };
-const votes = new Map<Player, undefined>([
-    [markus, undefined],
-    [kara, undefined],
-    [connor, undefined],
+const votes = new Map<string, undefined>([
+    ["Markus", undefined],
+    ["Kara", undefined],
+    ["Connor", undefined],
 ]);
 
 export const Chatting: Story = { args: { state: state } };
