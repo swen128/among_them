@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 import { LanguageModel } from '../api';
 import Chat from './Chat';
-import { gameMasterPrompt } from './gm_prompt';
+import { gameMasterPrompt } from './gmPrompt';
 import { parseResponse, qaPhasePrompt } from './prompt';
 import { AnswerState, BotPlayer, QuestionState, initialState, isPlayerTurn, withNewAnswer, withNewQuestion } from './state';
 

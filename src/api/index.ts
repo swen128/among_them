@@ -1,2 +1,2 @@
-export type { LanguageModel, Prompt } from "./language_model";
-export { OpenAiChat } from "./open_ai";
+export type { LanguageModel, Prompt } from "./languageModel";
+export { OpenAiChat } from "./openAi";

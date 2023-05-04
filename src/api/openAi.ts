@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { Configuration, CreateChatCompletionRequest, OpenAIApi } from "openai";
 import { z } from "zod";
-import { LanguageModel, Prompt } from "./language_model";
+import { LanguageModel, Prompt } from "./languageModel";
 
 export class OpenAiChat implements LanguageModel {
     private readonly openai: OpenAIApi;

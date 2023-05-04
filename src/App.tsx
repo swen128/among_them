@@ -1,5 +1,5 @@
 import './style.css';
-import { WordWolf } from './word_wolf';
+import { WordWolf } from './wordWolf';
 
 function App() {
   return (

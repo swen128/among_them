@@ -3,8 +3,8 @@ import fs from "fs";
 import yaml from "js-yaml";
 import { z } from "zod";
 import { OpenAiChat } from "../src/api";
-import { promptChat } from "../src/word_wolf/bot_brain";
-import { ChattingState, Player } from "../src/word_wolf/state";
+import { promptChat } from "../src/wordWolf/botBrain";
+import { ChattingState, Player } from "../src/wordWolf/state";
 
 dotenv.config({ path: '.env.local' });
 const apiKey = process.env.VITE_OPENAI_API_KEY ?? "";
