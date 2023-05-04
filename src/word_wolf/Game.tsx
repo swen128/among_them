@@ -1,31 +1,20 @@
 import React from 'react';
 import { useEffectOnce } from 'react-use';
-import { OpenAiChat } from '../api';
-import Chat from './Chat';
-import Vote from './Vote';
+import { LanguageModel } from '../api';
+import { GamePresenter } from './GamePresenter';
 import { useSinglePlayerGame } from './hooks';
 import { GameState, isBot, playerWord } from './state';
 
 interface Props {
+    languageModel: LanguageModel;
     playerName: string;
-    apiKey: string;
 }
 
-export const Game: React.FC<Props> = ({ apiKey, playerName }) => {
-    const languageModel = new OpenAiChat(apiKey);
+export const Game: React.FC<Props> = ({ languageModel, playerName }) => {
     const { state, submitChat, submitVote } = useSinglePlayerGame(languageModel, playerName);
-
     useCheatingLog(state);
 
-    return (<>
-        <div className="h-screen p-4">
-            <div className="w-full max-w-7xl h-full border p-4 shadow-lg rounded">
-                <div>Your word: {playerWord(state, state.humanPlayer)}</div>
-                {state.phase === "chat" && <Chat state={state} onSubmit={submitChat} />}
-                {state.phase === "vote" && <Vote state={state} onSubmit={submitVote} />}
-            </div>
-        </div>
-    </>);
+    return <GamePresenter state={state} onChatSubmit={submitChat} onVoteSubmit={submitVote} />;
 };
 
 function useCheatingLog(state: GameState) {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { OpenAiChat } from '../api';
 import { Game } from './Game';
 import { StartScreen } from './StartScreen';
 
@@ -9,7 +10,7 @@ export const WordWolf: React.FC = () => {
         ? <StartScreen onButtonClick={options => setState({ isStarted: true, options })} />
         : <Game
             playerName={state.options.playerName}
-            apiKey={state.options.apiKey}
+            languageModel={new OpenAiChat(state.options.apiKey)}
         />;
 };
 
