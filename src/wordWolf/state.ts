@@ -87,6 +87,11 @@ export function isBotVoteComplete(state: GameState): boolean {
         allVotes(state).every(({ voter, result }) => !isBot(voter) || result !== undefined);
 }
 
+export function isHumanVoteComplete(state: GameState): boolean {
+    return state.phase === "vote" &&
+        allVotes(state).every(({ voter, result }) => isBot(voter) || result !== undefined);
+}
+
 function allVotes(state: VotingState): { voter: Player, result: VotedResult | undefined }[] {
     return [...state.votes.entries()]
         .map(([voterName, result]) => ({

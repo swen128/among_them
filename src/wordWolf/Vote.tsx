@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ChatLog from './ChatLog';
 import VoteInput from './VoteInput';
-import { Player, VotingState, isBotVoteComplete, isVoteComplete, votes } from './state';
+import { Player, VotingState, isBotVoteComplete, isHumanVoteComplete, isVoteComplete, votes } from './state';
 
 interface Props {
     state: VotingState;
@@ -10,6 +10,7 @@ interface Props {
 
 const Vote: React.FC<Props> = ({ state, onSubmit }) => {
     const options = state.players.filter(p => p.type === "bot");
+    const disabled = isHumanVoteComplete(state);
 
     const [value, setValue] = useState<Player>(options[0]);
 
@@ -29,10 +30,11 @@ const Vote: React.FC<Props> = ({ state, onSubmit }) => {
             {voteProgress}
             <ChatLog state={state} />
             <form onSubmit={handleSubmit} className="border-t p-4 flex gap-4">
-                <VoteInput value={value} options={options} onChange={setValue} />
+                <VoteInput value={value} options={options} onChange={setValue} disabled={disabled} />
                 <button
                     type='submit'
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    disabled={disabled}
+                    className="bg-blue-500 disabled:bg-gray-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                     Vote
                 </button>

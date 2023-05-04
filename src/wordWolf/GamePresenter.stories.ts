@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { GamePresenter } from './GamePresenter';
-import { BotPlayer, ChattingState, HumanPlayer, initialState } from './state';
+import { BotPlayer, ChattingState, HumanPlayer, VotedResult, initialState } from './state';
 
 const meta = {
     component: GamePresenter,
@@ -38,3 +38,10 @@ const votes = new Map<string, undefined>([
 export const Chatting: Story = { args: { state: state } };
 export const BotSpeaking: Story = { args: { state: { ...state, turn: connor } } };
 export const Voting: Story = { args: { state: { ...state, phase: "vote", votes } } };
+
+const humanVote = new Map<string, VotedResult | undefined>([
+    ["Markus", { voted: kara, reason: "Lorem ipsum" }],
+    ["Kara", undefined],
+    ["Connor", undefined],
+]);
+export const HumanVoteCompleted: Story = { args: { state: { ...state, phase: "vote", votes: humanVote } } };
