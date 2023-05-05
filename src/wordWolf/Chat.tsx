@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ChatLog from './ChatLog';
-import { ChattingState, isPlayerTurn } from './state';
+import { ChattingState, isPlayerTurn } from './domain';
 
 interface Props {
     state: ChattingState;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ChatLog from './ChatLog';
 import VoteInput from './VoteInput';
-import { Player, VotingState, isBotVoteComplete, isHumanVoteComplete, isVoteComplete, votes } from './state';
+import { Player, VotingState, isBotVoteComplete, isHumanVoteComplete, isVoteComplete, votes } from './domain';
 
 interface Props {
     state: VotingState;

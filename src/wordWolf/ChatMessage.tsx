@@ -1,6 +1,6 @@
 import React from 'react';
 import ChatBubble from './ChatBubble';
-import { ChatMessage } from './state';
+import { ChatMessage } from './domain';
 
 const ChatMessage: React.FC<{ message: ChatMessage }> = ({ message }) => {
     return <ChatBubble sender={message.sender}>

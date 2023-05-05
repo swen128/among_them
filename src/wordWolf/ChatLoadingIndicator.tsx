@@ -1,5 +1,5 @@
 import React from 'react';
-import { Player } from './state';
+import { Player } from './domain';
 import ChatBubble from './ChatBubble';
 
 interface Props {

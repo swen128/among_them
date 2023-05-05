@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 import { LanguageModel } from "../api";
 import { promptChat, promptVote } from './botBrain';
-import { BotPlayer, ChattingState, GameState, HumanPlayer, Player, VotedResult, VotingState, initialState, isBot, isBotVoteComplete, isPlayerTurn, isVoteComplete, withNewChatMessage, withNewVote } from './state';
+import { BotPlayer, ChattingState, GameState, HumanPlayer, Player, VotedResult, VotingState, initialState, isBot, isBotVoteComplete, isPlayerTurn, isVoteComplete, withNewChatMessage, withNewVote } from './domain';
 import { getRandomWordPair } from './wordPairs';
 
 function useGame(initialState: GameState) {

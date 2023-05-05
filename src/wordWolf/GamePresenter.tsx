@@ -1,7 +1,7 @@
 import React from 'react';
 import Chat from './Chat';
 import Vote from './Vote';
-import { GameState, Player, playerWord } from './state';
+import { GameState, Player, playerWord } from './domain';
 
 interface Props {
     state: GameState;

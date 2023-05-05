@@ -2,7 +2,7 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { BotPlayer, VotedResult, VotingState } from "../state";
+import { BotPlayer, VotedResult, VotingState } from "../domain";
 import { chatLog, genericInstructions } from "./common";
 
 function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {

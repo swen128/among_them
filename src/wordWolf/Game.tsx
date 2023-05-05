@@ -3,7 +3,7 @@ import { useEffectOnce } from 'react-use';
 import { LanguageModel } from '../api';
 import { GamePresenter } from './GamePresenter';
 import { useSinglePlayerGame } from './hooks';
-import { GameState, isBot, playerWord } from './state';
+import { GameState, isBot, playerWord } from './domain';
 
 interface Props {
     languageModel: LanguageModel;

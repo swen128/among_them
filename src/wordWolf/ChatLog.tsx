@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChatLoadingIndicator } from './ChatLoadingIndicator';
 import ChatMessage from './ChatMessage';
-import { GameState } from './state';
+import { GameState } from './domain';
 
 interface Props {
     state: GameState;

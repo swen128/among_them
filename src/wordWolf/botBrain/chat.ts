@@ -2,7 +2,7 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { ChattingState, playerWord } from "../state";
+import { ChattingState, playerWord } from "../domain";
 
 export function buildPrompt(state: ChattingState): Prompt[] {
     const player = state.turn;

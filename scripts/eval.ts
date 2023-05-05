@@ -4,7 +4,7 @@ import yaml from "js-yaml";
 import { z } from "zod";
 import { OpenAiChat } from "../src/api";
 import { promptChat } from "../src/wordWolf/botBrain";
-import { ChattingState, Player } from "../src/wordWolf/state";
+import { ChattingState, Player } from "../src/wordWolf/domain";
 
 dotenv.config({ path: '.env.local' });
 const apiKey = process.env.VITE_OPENAI_API_KEY ?? "";

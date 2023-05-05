@@ -1,6 +1,6 @@
 import { dedent } from "ts-dedent";
 import { Prompt } from "../../api";
-import { BotPlayer, GameState, playerWord } from "../state";
+import { BotPlayer, GameState, playerWord } from "../domain";
 
 export const genericInstructions = (state: GameState, player: BotPlayer): Prompt => ({
     role: "system",
