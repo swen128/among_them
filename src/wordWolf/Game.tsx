@@ -11,10 +11,16 @@ interface Props {
 }
 
 export const Game: React.FC<Props> = ({ languageModel, playerName }) => {
-    const { state, submitChat, submitVote } = useSinglePlayerGame(languageModel, playerName);
+    const { state, submitChat, submitVote, restart } = useSinglePlayerGame(languageModel, playerName);
     useCheatingLog(state);
 
-    return <GamePresenter state={state} onChatSubmit={submitChat} onVoteSubmit={submitVote} />;
+    return <GamePresenter
+        state={state}
+        humanPlayer={state.humanPlayer}
+        onChatSubmit={submitChat}
+        onVoteSubmit={submitVote}
+        onRestart={restart}
+    />;
 };
 
 function useCheatingLog(state: GameState) {

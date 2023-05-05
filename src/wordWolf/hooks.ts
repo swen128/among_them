@@ -5,8 +5,8 @@ import { promptChat, promptVote } from './botBrain';
 import { BotPlayer, ChattingState, GameState, HumanPlayer, Player, VotedResult, VotingState, initialState, isBot, isBotVoteComplete, isPlayerTurn, isVoteComplete, withNewChatMessage, withNewVote } from './domain';
 import { getRandomWordPair } from './wordPairs';
 
-function useGame(initialState: GameState) {
-    const [state, setState] = useState(initialState);
+function useGame(init: GameState) {
+    const [state, setState] = useState(init);
 
     const submitChat = (text: string) => {
         setState(state => state.phase === "chat" ? withNewChatMessage(state, text) : state)
@@ -17,14 +17,15 @@ function useGame(initialState: GameState) {
             : state
         );
     };
+    const restart = (state: ChattingState) => setState(state);
 
-    return { state, submitChat, submitVote };
+    return { state, submitChat, submitVote, restart };
 }
 
 export function useSinglePlayerGame(languageModel: LanguageModel, userName: string) {
     const humanPlayer: HumanPlayer = { type: "human", name: userName };
     const initialState = bootStrap(humanPlayer);
-    const { state, submitChat, submitVote } = useGame(initialState);
+    const { state, submitChat, submitVote, restart } = useGame(initialState);
 
     const botPlayers = state.players.filter(isBot);
 
@@ -61,11 +62,12 @@ export function useSinglePlayerGame(languageModel: LanguageModel, userName: stri
     return {
         state: { ...state, humanPlayer },
         submitChat: submitHumanChat,
-        submitVote: submitHumanVote
+        submitVote: submitHumanVote,
+        restart: () => restart(bootStrap(humanPlayer)),
     };
 }
 
-function bootStrap(humanPlayer: HumanPlayer): GameState {
+function bootStrap(humanPlayer: HumanPlayer): ChattingState {
     const botPlayers: BotPlayer[] = [
         { type: "bot", name: "Bob", characterDescription: "A confident, experienced Word Werewolf player" },
         { type: "bot", name: "Alice", characterDescription: "A confident, experienced Word Werewolf player" },
@@ -92,13 +94,19 @@ const promptChat_ = async (languageModel: LanguageModel, state: ChattingState): 
     }
 }
 
-const promptVote_ = (lm: LanguageModel, state: VotingState) =>
-    async (voter: BotPlayer): Promise<VotedResult> => {
-        const maxRetries = 3;
-        const func = () => promptVote(lm, state, voter);
-        const fallback = () => ({ voted: randomVote(state, voter), reason: "Random vote" });
-        return retry(maxRetries, func, fallback);
+const promptVote_ = (lm: LanguageModel, state: VotingState) => async (voter: BotPlayer): Promise<VotedResult> => {
+    const maxRetries = 3;
+    const func = async () => {
+        const response = await promptVote(lm, state, voter);
+        
+        console.log(`${voter.name}'s thoughts: ${response.reason}`);
+        console.log(`${voter.name}'s vote: ${response.voted.name}`);
+
+        return response;
     }
+    const fallback = () => ({ voted: randomVote(state, voter), reason: "Random vote" });
+    return retry(maxRetries, func, fallback);
+}
 
 function randomVote(state: VotingState, voter: BotPlayer): Player {
     const players = state.players;

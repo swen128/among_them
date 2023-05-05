@@ -59,7 +59,18 @@ export function counts(state: VotingState | FinishedState): Map<Player, number> 
     return counts;
 }
 
-export function executedPlayers(state: FinishedState): Player[] {
+export function endResults(state: FinishedState) {
+    const executed = executedPlayers(state);
+    const hasWolfWon = !executed.some(player => player.name === state.wolf.name);
+    const winners = hasWolfWon
+        ? [state.wolf]
+        : state.players.filter(p => p.name !== state.wolf.name);
+    const hasPlayerWon = (player: Player) => winners.some(winner => winner.name === player.name);
+
+    return { executed, hasWolfWon, winners, hasPlayerWon, votes: votes(state), };
+}
+
+function executedPlayers(state: FinishedState): Player[] {
     const cnts = counts(state);
     const maxCount = Math.max(...cnts.values());
 
