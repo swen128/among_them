@@ -6,7 +6,10 @@ import { LanguageModel, Prompt } from "./languageModel";
 export class OpenAiChat implements LanguageModel {
     private readonly openai: OpenAIApi;
 
-    constructor(apiKey: string) {
+    constructor(
+        apiKey: string,
+        private readonly timeoutMillis: number = 30 * 1000,
+    ) {
         const conf = new Configuration({
             apiKey: apiKey
         });
@@ -15,7 +18,7 @@ export class OpenAiChat implements LanguageModel {
 
     private async request(request: CreateChatCompletionRequest): Promise<string> {
         try {
-            const response = await this.openai.createChatCompletion(request);
+            const response = await this.openai.createChatCompletion(request, { timeout: this.timeoutMillis });
             const answer = response.data.choices[0].message?.content ?? "";
             return answer;
         } catch (e: unknown) {
