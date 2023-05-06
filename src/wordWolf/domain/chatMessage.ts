@@ -1,4 +1,4 @@
-import { Player } from "../state";
+import { Player } from "./player";
 
 export interface ChatMessage {
     sender: Player;
