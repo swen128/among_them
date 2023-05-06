@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { GamePresenter } from './GamePresenter';
-import { BotPlayer, ChattingState, GameState, HumanPlayer, VotedResult, initialState } from './domain';
-import { emptyVotes } from './domain/vote';
+import { BotPlayer, ChattingState, GameState, HumanPlayer, VotedResult, initialState, emptyVotes } from './domain';
 
 const meta = {
     component: GamePresenter,

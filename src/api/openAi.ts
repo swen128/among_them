@@ -64,8 +64,8 @@ export class TooManyTokensError extends Error {
         // 'This model's maximum context length is 4097 tokens. However, your messages resulted in 12007 tokens. Please reduce the length of the messages.'
         const message = e.error.message;
 
-        const tokenPattern = new RegExp("maximum context length is (\d)+ tokens");
-        const maxTokenPattern = new RegExp("your messages resulted in (\d)+ tokens");
+        const tokenPattern = /maximum context length is (\d)+ tokens/;
+        const maxTokenPattern = /your messages resulted in (\d)+ tokens/;
 
         const tokenStr = message.match(tokenPattern)?.[1];
         const maxTokenStr = message.match(maxTokenPattern)?.[1];

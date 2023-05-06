@@ -14,6 +14,8 @@ module.exports = {
   plugins: ['react-refresh'],
   rules: {
     'react-refresh/only-export-components': 'warn',
-    'import/no-internal-modules': 'error',
+    "import/no-internal-modules": ["error", {
+      "allow": ["**/node_modules/**"]
+    }]
   },
 };
