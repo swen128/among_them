@@ -3,5 +3,5 @@ export type { BotPlayer, HumanPlayer, Player } from "./player";
 export { endResults, isBot, isBotVoteComplete, isHumanVoteComplete, isPlayerTurn, isVoteComplete, playerWord, votes } from "./query";
 export { initialState, withNewChatMessage, withNewVote } from "./state";
 export type { ChattingState, FinishedState, GameState, VotingState } from "./state";
-export type { VoteProgress, VotedResult, emptyVotes } from "./vote";
-
+export type { VoteProgress, VotedResult } from "./vote";
+export {emptyVotes} from "./vote";
