@@ -2,27 +2,30 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { BotPlayer, VotedResult, VotingState } from "../domain";
+import { BotPlayer, VotedResult, VotingState, playerWord } from "../domain";
 import { chatLog, genericInstructions } from "./common";
 
 function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
-    const responseExample: VotingResponse = {
-        thoughts: "string",
-        votedPlayerName: "string",
-    };
+    const responseExamples: VotingResponse[] = [
+        {
+            thoughts: "Markus said it 'walks silently', which sounds more like 'cat' than my word 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', which makes me the werewolf. I should pretend to talk about cat.",
+            votedPlayerName: "Kara",
+        },
+    ];
 
     const instructions = dedent`
         ${genericInstructions(state, player)}
 
         # What you should do
         1. Summarize each other player's comments so far.
-        2. Guess who is most likely the minority (werewolf), explaining your logic step by step.
-        3. Vote for the player to execute.
-            - If you suspect you are the werewolf, vote for someone else.
-            - If not, vote for the would-be werewolf.
+        2. Think if each of their topic align with yours (${playerWord(state, player)}).
+        3. Guess who is most likely the werewolf.
+            - When multiple people are talking about different topic from yours, you should be the werewolf.
+            - When someone agrees with your topic, you (and that person) are probably not the werewolf.
         
         # Response format
-        ${JSON.stringify(responseExample)}
+        You must respond with a single valid JSON. Here is an example:
+        ${responseExamples.map(example => JSON.stringify(example)).join("\n")}
     `;
 
     return [

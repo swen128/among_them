@@ -18,7 +18,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
             likelyWerewolf: "Kara",
             say: "They love high places, right?"
         },
-    ]
+    ];
 
     const instructions = dedent`
         ${genericInstructions(state, player)}
@@ -26,7 +26,7 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         # What you should do
         1. Summarize each other player's comments so far.
         2. Think if each of their topic align with yours (${playerWord(state, player)}).
-        3. Guess who are most likely the werewolf.
+        3. Guess who is most likely the werewolf.
             - When multiple people are talking about different topic from yours, you should be the werewolf.
             - When someone agrees with your topic, you (and that person) are probably not the werewolf.
         4. Think what you should say next.
