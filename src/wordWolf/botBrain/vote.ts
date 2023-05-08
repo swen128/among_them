@@ -11,7 +11,9 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
         votedPlayerName: "string",
     };
 
-    const postInstrucions = dedent`
+    const instructions = dedent`
+        ${genericInstructions(state, player)}
+
         # What you should do
         1. Summarize each other player's comments so far.
         2. Guess who is most likely the minority (werewolf), explaining your logic step by step.
@@ -24,9 +26,8 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
     `;
 
     return [
-        genericInstructions(state, player),
+        { role: "system", content: instructions },
         ...chatLog(state, player),
-        { role: "system", content: postInstrucions },
     ];
 }
 
