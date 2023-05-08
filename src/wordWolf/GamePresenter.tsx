@@ -14,7 +14,7 @@ interface Props {
 
 export const GamePresenter: React.FC<Props> = (props) => {
     return (<>
-        <div className="h-screen md:p-4">
+        <div className="h-screen md:p-4 flex justify-center">
             <div className="w-full max-w-7xl h-full border p-4 shadow-lg rounded">
                 <div>Your word: {playerWord(props.state, props.humanPlayer)}</div>
                 <SpecificGamePresenter {...props} />
