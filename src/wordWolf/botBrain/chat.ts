@@ -2,7 +2,7 @@ import { dedent } from "ts-dedent";
 import { z } from "zod";
 import { LanguageModel, Prompt } from "../../api";
 import { jsonStringSchema } from "../../utils";
-import { ChattingState } from "../domain";
+import { ChattingState, playerWord } from "../domain";
 import { chatLog, genericInstructions } from "./common";
 
 export function buildPrompt(state: ChattingState): Prompt[] {
@@ -12,22 +12,31 @@ export function buildPrompt(state: ChattingState): Prompt[] {
         throw new Error("Cannot build prompt for player turn");
     }
 
-    const responseExample: ChatResponse = {
-        thoughts: "string",
-        likelyWerewolf: "one of the player names",
-        say: "string"
-    }
+    const responseExamples: ChatResponse[] = [
+        {
+            thoughts: "Markus said it 'walks silently', which sounds more like 'cat' than my word 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', which makes me the werewolf. I should pretend to talk about cat.",
+            likelyWerewolf: "Kara",
+            say: "They love high places, right?"
+        },
+    ]
 
     const instructions = dedent`
         ${genericInstructions(state, player)}
         
         # What you should do
         1. Summarize each other player's comments so far.
-        2. Guess who is most likely the minority (werewolf), explaining your logic step by step.
-        3. Decide what to say next.
+        2. Think if each of their topic align with yours (${playerWord(state, player)}).
+        3. Guess who are most likely the werewolf.
+            - When multiple people are talking about different topic from yours, you should be the werewolf.
+            - When someone agrees with your topic, you (and that person) are probably not the werewolf.
+        4. Think what you should say next.
+            - At the very beginning, give brief and vague description of the word. When the word is dog, for example, say something like "I adore them".
+            - If you might be the minority, you must blend in by deducing the villagers' word and lying to avoid detection.
+            - When you lack information, ask questions about the word to find out the werewolf.
 
         # Response format
-        ${JSON.stringify(responseExample)}
+        You must respond with a single valid JSON. Here is an example:
+        ${responseExamples.map(example => JSON.stringify(example)).join("\n")}
     `;
 
     return [
