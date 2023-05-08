@@ -33,6 +33,7 @@ export class OpenAiChat implements LanguageModel {
         return this.request({
             messages,
             model: "gpt-4",
+            temperature: 0,
         });
     }
 
