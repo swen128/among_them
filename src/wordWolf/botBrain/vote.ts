@@ -8,8 +8,8 @@ import { chatLog, genericInstructions } from "./common";
 function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
     const responseExamples: VotingResponse[] = [
         {
-            thoughts: "Markus said it 'walks silently', which sounds more like 'cat' than my word 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', which makes me the werewolf. I should pretend to talk about cat.",
-            votedPlayerName: "Kara",
+            thoughts: "Markus said it 'walks silently', which sounds more like 'cat' than my word 'dog'. Conner's description 'independent animal' also suggests 'cat'. The majority word is thus most likely 'cat', which makes me the werewolf. I should vote for someone else.",
+            votedPlayerName: "Markus",
         },
     ];
 
@@ -19,7 +19,7 @@ function buildVotingPrompt(state: VotingState, player: BotPlayer): Prompt[] {
         # What you should do
         1. Summarize each other player's comments so far.
         2. Think if each of their topic align with yours (${playerWord(state, player)}).
-        3. Guess who is most likely the werewolf.
+        3. Guess who is most likely the werewolf. You must pick one and vote for him/her.
             - When multiple people are talking about different topic from yours, you should be the werewolf.
             - When someone agrees with your topic, you (and that person) are probably not the werewolf.
         
