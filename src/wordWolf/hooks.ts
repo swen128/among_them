@@ -119,8 +119,9 @@ function randomVote(state: VotingState, voter: BotPlayer): Player {
 }
 
 function retry<T>(maxRetries: number, func: () => Promise<T>, fallback: () => T): Promise<T> {
-    return func().catch(() => {
+    return func().catch(e => {
         if (maxRetries <= 0) return fallback();
+        console.warn(e);
         return retry(maxRetries - 1, func, fallback);
     });
 }
