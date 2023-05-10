@@ -64,3 +64,13 @@
     - "[Bob] I like the creativity and endless possibilities in it."
     - "[Alice] Is it something that requires any specific equpment or tools?"
     - "[Connor] I love building things in it, too, Bob."
+
+- description: Subtle discrepancy. (wolf side)
+  commonWord: Sandal
+  wolfWord: Sneaker
+  wolf: Bob
+  next: Bob
+  chatLog:
+    - "[Bob] Do you use them mostly indoors or outdoors?"
+    - "[Alice] I'd say they're more commonly used outdoors, but can be used indoors as well."
+    - "[Connor] Yeah, outdoors. I would often wear it when it's warm."
