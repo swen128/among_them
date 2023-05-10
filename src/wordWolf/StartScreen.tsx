@@ -11,9 +11,9 @@ export const StartScreen: React.FC<Props> = ({ onButtonClick }) => {
 
     const handleButtonClick = () => {
         // TODO: More sophisticated validation.
-        const playerNamePattern = /^[a-zA-Z0-9_]+$/;
+        const playerNamePattern = /^[a-zA-Z0-9_]{1,20}$/;
         if (!playerNamePattern.test(playerName)) {
-            alert("The player name must be alphanumeric and underscores only.")
+            alert("The player name must be 1-20 characters long and only contain alphanumeric or underscores.")
             return;
         }
 
