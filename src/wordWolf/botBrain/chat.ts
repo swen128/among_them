@@ -35,7 +35,9 @@ export function buildPrompt(state: ChattingState): Prompt[] {
             - When you lack information, ask questions about the word to find out the werewolf.
 
         # Response format
-        You must respond with a single valid JSON. Here is an example:
+        You must respond with a single valid JSON.
+        Your inner thoughts should always be in English, while you speak with the language and tone specified in the character description.
+        Here is an example:
         ${responseExamples.map(example => JSON.stringify(example)).join("\n")}
     `;
 

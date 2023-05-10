@@ -69,8 +69,8 @@ export function useSinglePlayerGame(languageModel: LanguageModel, userName: stri
 
 function bootStrap(humanPlayer: HumanPlayer): ChattingState {
     const botPlayers: BotPlayer[] = [
-        { type: "bot", name: "Bob", characterDescription: "A confident, experienced Word Werewolf player" },
-        { type: "bot", name: "Alice", characterDescription: "A confident, experienced Word Werewolf player" },
+        { type: "bot", name: "tanaka", characterDescription: "砕けた口調のエセ関西弁で話す熟練ワード人狼プレイヤー" },
+        { type: "bot", name: "sato", characterDescription: "砕けた口調のエセ関西弁で話す熟練ワード人狼プレイヤー" },
     ];
     const players = [...botPlayers, humanPlayer];
     const wolf = players[Math.floor(Math.random() * players.length)];
