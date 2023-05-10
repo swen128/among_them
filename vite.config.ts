@@ -6,5 +6,5 @@ export default defineConfig({
   plugins: [react()],
 
   // See: https://vitejs.dev/guide/static-deploy.html#github-pages
-  base: 'among_them',
+  base: '/among_them',
 })
