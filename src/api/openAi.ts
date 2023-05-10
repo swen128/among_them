@@ -8,7 +8,7 @@ export class OpenAiChat implements LanguageModel {
 
     constructor(
         apiKey: string,
-        private readonly timeoutMillis: number = 30 * 1000,
+        private readonly timeoutMillis: number = 50 * 1000,
     ) {
         const conf = new Configuration({
             apiKey: apiKey
